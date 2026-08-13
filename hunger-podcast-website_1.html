@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUNGER — En kultur- och samhällspodcast från Linköping</title>
+<meta name="description" content="HUNGER podcast. Alla bär på en intressant story. Bara lyssna.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1E7D2;
+    --paper-light:#FBF6EA;
+    --ink:#1C1712;
+    --forest:#1F2B1A;
+    --forest-deep:#141C11;
+    --marigold:#E9A23B;
+    --pink:#E23E82;
+    --moss:#5C6B4A;
+    --line: rgba(241,231,210,0.18);
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *,*::before,*::after{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+  body{
+    margin:0;
+    background:var(--forest-deep);
+    color:var(--ink);
+    font-family:'Newsreader', Georgia, serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  h1,h2,h3{ margin:0; font-family:'Bebas Neue', sans-serif; letter-spacing:0.01em; font-weight:400; }
+  .mono{ font-family:'Space Mono', monospace; }
+  .wrap{ max-width:1180px; margin:0 auto; padding-left:28px; padding-right:28px; }
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    text-transform:uppercase;
+    font-size:12.5px;
+    letter-spacing:0.18em;
+    font-weight:700;
+  }
+  :focus-visible{ outline:3px solid var(--pink); outline-offset:3px; }
+
+  /* fixed full-page photo background, sits behind every section */
+  .bg-photo{
+    position:fixed; inset:0; z-index:-2;
+    background:url("SofaHungerWeb-horizontal.jpg") center/cover no-repeat;
+  }
+  /* grain overlay, fixed across whole page */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:999;
+    opacity:0.05;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(226,62,130,0.16), transparent 55%),
+      rgba(31,43,26,0.45);
+    color:var(--paper-light);
+    padding:96px 0;
+    overflow:hidden;
+  }
+  .hero h1{
+    font-size:clamp(4.4rem, 16vw, 11.5rem);
+    line-height:0.86;
+    color:var(--marigold);
+    text-shadow:6px 6px 0 var(--pink);
+    margin:0;
+    word-break:break-word;
+  }
+  .hero-content{ display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:center; }
+  .hero-right{ display:flex; justify-content:center; }
+  .hero-right img{
+    width:100%; max-width:380px; aspect-ratio:1/1; object-fit:cover;
+    border-radius:50%; border:3px solid var(--marigold);
+    box-shadow:10px 10px 0 var(--pink);
+  }
+  @media (max-width:860px){
+    .hero-content{ grid-template-columns:1fr; }
+    .hero-right{ order:-1; }
+    .hero-right img{ max-width:220px; }
+  }
+
+  /* ---------- curtain reveal ---------- */
+  .curtain-reveal{ position:relative; height:220vh; }
+  .curtain-stage{ position:sticky; top:0; height:100vh; overflow:hidden; }
+  .curtain-image{ position:absolute; inset:0; }
+  .curtain-image img{ width:100%; height:100%; object-fit:cover; }
+  .curtain-panel{
+    position:absolute; top:0; bottom:0; width:50%;
+    background:var(--forest);
+    will-change:transform;
+  }
+  .curtain-left{ left:0; border-right:4px solid var(--marigold); }
+  .curtain-right{ right:0; border-left:4px solid var(--marigold); }
+
+  /* ---------- episodes ---------- */
+  .episodes{ background:rgba(28,23,18,0.85); color:var(--paper-light); padding:110px 0; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:52px; flex-wrap:wrap; }
+  .section-head h2{ font-size:clamp(2.6rem,6vw,4.2rem); color:var(--paper-light); }
+  .section-head .eyebrow{ color:var(--marigold); }
+  .ep-list{ border-top:2px solid var(--line); }
+  .ep-row{
+    display:grid;
+    grid-template-columns:64px 1fr auto auto;
+    gap:22px;
+    align-items:center;
+    padding:26px 4px;
+    border-bottom:2px solid var(--line);
+    text-decoration:none;
+    color:var(--paper-light);
+    transition:background-color 0.25s ease, padding-left 0.25s ease;
+  }
+  .ep-row:hover{ background:rgba(233,162,59,0.08); padding-left:14px; }
+  .ep-num{ font-family:'Space Mono', monospace; color:var(--marigold); font-size:14px; }
+  .ep-title{ font-family:'Bebas Neue', sans-serif; font-size:clamp(1.25rem,2.6vw,1.7rem); letter-spacing:0.01em; }
+  .ep-guest{ font-family:'Newsreader', serif; font-style:italic; font-size:14.5px; color:rgba(251,246,234,0.65); display:block; margin-top:4px; }
+  .ep-tag{
+    font-family:'Space Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em;
+    border:1px solid var(--pink); color:var(--paper-light); padding:5px 10px; white-space:nowrap; justify-self:end;
+  }
+  .ep-play{ color:var(--marigold); justify-self:end; width:16px; }
+  @media (max-width:640px){
+    .ep-row{ grid-template-columns:40px 1fr; }
+    .ep-tag, .ep-play{ display:none; }
+  }
+  .episodes-note{ margin-top:34px; font-size:13px; color:rgba(251,246,234,0.5); font-family:'Space Mono', monospace; }
+
+  /* ---------- hosts ---------- */
+  .hosts{ background:rgba(251,246,234,0.88); padding:110px 0; }
+  .hosts-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; margin-top:52px; }
+  .host-photo{
+    aspect-ratio:4/5;
+    border:2px solid var(--ink);
+    box-shadow:10px 10px 0 var(--marigold);
+    background:
+      radial-gradient(circle at 30% 25%, rgba(226,62,130,0.35), transparent 55%),
+      linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    color:rgba(251,246,234,0.55);
+  }
+  .host-photo svg{ width:38px; height:38px; opacity:0.6; }
+  .host-photo span{ font-family:'Space Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; }
+  .host-name{ margin-top:22px; font-size:2.2rem; color:var(--forest); }
+  .host-handle{
+    font-family:'Space Mono', monospace; font-size:13px; color:var(--pink); text-decoration:none;
+    display:inline-block; margin-top:4px;
+  }
+  .host-bio{ margin-top:12px; font-style:italic; color:var(--ink); }
+
+  /* ---------- sponsors: wall of fame ---------- */
+  .sponsors{
+    position:relative;
+    background: rgba(20,28,17,0.55);
+    color:var(--paper-light);
+    padding:110px 0 130px;
+  }
+  .sponsors .section-head h2{ color:var(--marigold); text-shadow:4px 4px 0 var(--pink); }
+  .sponsors-intro{ max-width:56ch; font-style:italic; color:rgba(251,246,234,0.8); margin-top:-28px; margin-bottom:56px; }
+  .tier{ margin-bottom:56px; }
+  .tier-label{
+    font-family:'Space Mono', monospace; text-transform:uppercase; letter-spacing:0.14em; font-size:13px;
+    color:var(--paper-light); opacity:0.7; margin-bottom:22px; display:flex; align-items:center; gap:14px;
+  }
+  .tier-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+  .sticker-grid{ display:flex; flex-wrap:wrap; gap:22px; }
+  .sticker{
+    position:relative;
+    background:var(--paper-light);
+    color:var(--ink);
+    border:2px solid var(--ink);
+    padding:20px 22px;
+    text-decoration:none;
+    box-shadow:5px 5px 0 rgba(0,0,0,0.35);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .sticker::before{
+    content:"";
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg);
+    width:54px; height:16px;
+    background:rgba(233,162,59,0.55);
+    border:1px solid rgba(28,23,18,0.25);
+  }
+  .sticker:hover{ transform:rotate(0deg) translateY(-4px) !important; box-shadow:8px 8px 0 var(--pink); }
+  .sticker-name{ font-family:'Bebas Neue', sans-serif; letter-spacing:0.01em; line-height:1; }
+  .sticker-cat{ display:block; font-family:'Space Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--moss); margin-top:6px; }
+
+  .tier-headliner .sticker{ font-size:1.9rem; padding:28px 30px; }
+  .tier-headliner .sticker:nth-child(odd){ transform:rotate(-2.5deg); }
+  .tier-headliner .sticker:nth-child(even){ transform:rotate(2deg); }
+
+  .tier-support .sticker-name{ font-size:1.3rem; }
+  .tier-support .sticker:nth-child(3n){ transform:rotate(3deg); }
+  .tier-support .sticker:nth-child(3n+1){ transform:rotate(-2deg); }
+  .tier-support .sticker:nth-child(3n+2){ transform:rotate(1.5deg); }
+
+  .tier-crew .sticker{ padding:12px 16px; }
+  .tier-crew .sticker-name{ font-size:1rem; }
+  .tier-crew .sticker::before{ width:30px; height:10px; top:-6px; }
+  .tier-crew .sticker:nth-child(4n){ transform:rotate(-3deg); }
+  .tier-crew .sticker:nth-child(4n+1){ transform:rotate(2.5deg); }
+  .tier-crew .sticker:nth-child(4n+2){ transform:rotate(-1.5deg); }
+  .tier-crew .sticker:nth-child(4n+3){ transform:rotate(3deg); }
+
+  .become-sponsor{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'Space Mono', monospace; text-transform:uppercase; font-size:13px; letter-spacing:0.1em;
+    color:var(--marigold); text-decoration:none; border-bottom:2px solid var(--marigold); padding-bottom:4px;
+    margin-top:12px;
+  }
+  .become-sponsor:hover{ color:var(--pink); border-color:var(--pink); }
+
+  /* ---------- footer ---------- */
+  footer{ background:rgba(28,23,18,0.88); color:rgba(251,246,234,0.7); padding:70px 0 32px; }
+  .footer-grid{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; padding-bottom:44px; border-bottom:1px solid var(--line); }
+  footer h3{ font-size:1.6rem; color:var(--paper-light); margin-bottom:12px; }
+  footer p{ font-size:14px; max-width:36ch; }
+  .footer-links{ list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+  .footer-links a{ text-decoration:none; font-family:'Space Mono', monospace; font-size:13px; text-transform:uppercase; letter-spacing:0.06em; }
+  .footer-links a:hover{ color:var(--marigold); }
+  .footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; padding-top:24px; font-family:'Space Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; opacity:0.55; }
+
+  @media (max-width:860px){
+    .hosts-grid{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+
+<section class="hero" id="top">
+  <div class="wrap hero-content">
+    <div class="hero-left">
+      <h1>HUNGER</h1>
+    </div>
+    <div class="hero-right">
+      <img src="circlePicHungerWeb.png" alt="HUNGER podcast" width="380" height="380">
+    </div>
+  </div>
+</section>
+
+<section class="curtain-reveal">
+  <div class="curtain-stage">
+    <div class="curtain-image"><img src="OrangeWallHungerWeb.png" alt="" aria-hidden="true"></div>
+    <div class="curtain-panel curtain-left"></div>
+    <div class="curtain-panel curtain-right"></div>
+  </div>
+</section>
+
+<section class="episodes" id="avsnitt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <p class="eyebrow">Just nu</p>
+        <h2>Senaste avsnitten</h2>
+      </div>
+    </div>
+    <div class="ep-list reveal">
+      <a class="ep-row" href="#" target="_blank" rel="noopener">
+        <span class="ep-num mono">13</span>
+        <span>
+          <span class="ep-title">Bitter — riot grrrls have arrived</span>
+          <span class="ep-guest">med Olle Bush &amp; Dunderjorden</span>
+        </span>
+        <span class="ep-tag">Musik</span>
+        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
+      </a>
+      <a class="ep-row" href="#" target="_blank" rel="noopener">
+        <span class="ep-num mono">12</span>
+        <span>
+          <span class="ep-title">Viggen &amp; Per Valsinger om scenen i LKPG</span>
+          <span class="ep-guest">Dunderjorden-serien, del 2</span>
+        </span>
+        <span class="ep-tag">Scen</span>
+        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
+      </a>
+      <a class="ep-row" href="#" target="_blank" rel="noopener">
+        <span class="ep-num mono">11</span>
+        <span>
+          <span class="ep-title">Sofijah om att bygga eget</span>
+          <span class="ep-guest">med Sofijah &amp; Sandra Thulin</span>
+        </span>
+        <span class="ep-tag">Samhälle</span>
+        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
+      </a>
+      <a class="ep-row" href="#" target="_blank" rel="noopener">
+        <span class="ep-num mono">10</span>
+        <span>
+          <span class="ep-title">LKPG Hardcore: tio år av DIY</span>
+          <span class="ep-guest">med gäster ur LKPGHARDCORE</span>
+        </span>
+        <span class="ep-tag">Musik</span>
+        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
+      </a>
+      <a class="ep-row" href="#" target="_blank" rel="noopener">
+        <span class="ep-num mono">09</span>
+        <span>
+          <span class="ep-title">Vad bär du på? — med Corren-Marta</span>
+          <span class="ep-guest">Personliga berättelser, del 1</span>
+        </span>
+        <span class="ep-tag">Kultur</span>
+        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
+      </a>
+    </div>
+    <p class="episodes-note">Titlar &amp; gäster ovan är platshållare byggda på era highlights — byt ut mot riktiga shownotes.</p>
+  </div>
+</section>
+
+<section class="hosts reveal" id="vardar">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow" style="color:var(--pink);">Vilka vi är</p>
+        <h2 style="color:var(--forest);">Rösterna bakom HUNGER</h2>
+      </div>
+    </div>
+    <div class="hosts-grid">
+      <div>
+        <div class="host-photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg>
+          <span>Foto — lägg in ditt eget</span>
+        </div>
+        <h3 class="host-name">Mali1n</h3>
+        <a class="host-handle" href="#" target="_blank" rel="noopener">@mali1n</a>
+        <p class="host-bio">Frågar det där som alla tänker men ingen säger rakt ut.</p>
+      </div>
+      <div>
+        <div class="host-photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg>
+          <span>Foto — lägg in ditt eget</span>
+        </div>
+        <h3 class="host-name">Alma</h3>
+        <a class="host-handle" href="#" target="_blank" rel="noopener">@alma.mateojohansson</a>
+        <p class="host-bio">Håller trådarna ihop och hittar nästa gäst innan mikrofonen ens stängts av.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sponsors reveal" id="sponsorer">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Tack</p>
+        <h2>Wall of Fame</h2>
+      </div>
+    </div>
+    <p class="sponsors-intro">Utan dessa hjältar hade HUNGER varit tyst. Stort, äkta tack till alla som stöttar podden — stort som smått.</p>
+
+    <div class="tier">
+      <p class="tier-label">Headliners</p>
+      <div class="sticker-grid tier-headliner">
+        <a class="sticker" href="#"><span class="sticker-name">Kafé Björk</span><span class="sticker-cat">Kafé</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Bryggeri LKPG</span><span class="sticker-cat">Bryggeri</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Vinylgänget</span><span class="sticker-cat">Skivbutik</span></a>
+      </div>
+    </div>
+
+    <div class="tier">
+      <p class="tier-label">Support Act</p>
+      <div class="sticker-grid tier-support">
+        <a class="sticker" href="#"><span class="sticker-name">Sidan 2 Bokhandel</span><span class="sticker-cat">Böcker</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Studio Ljudrum</span><span class="sticker-cat">Ljudstudio</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Grönsakslandet</span><span class="sticker-cat">Saluhall</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Cykelverkstan Ekbacken</span><span class="sticker-cat">Cykel</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Tatuering Nordstjärnan</span><span class="sticker-cat">Studio</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Saluhallen Deli</span><span class="sticker-cat">Mat</span></a>
+      </div>
+    </div>
+
+    <div class="tier">
+      <p class="tier-label">Crew &amp; Vänner</p>
+      <div class="sticker-grid tier-crew">
+        <a class="sticker" href="#"><span class="sticker-name">Frisör Front</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Repig Studios</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Fanzine Klubben</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Loppis Söder</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Bruna Bageriet</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">DIY Skateshop</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Kollektivet Rum 3</span></a>
+        <a class="sticker" href="#"><span class="sticker-name">Blomsterlandet LKPG</span></a>
+      </div>
+    </div>
+
+    <a class="become-sponsor" href="#kontakt">Bli sponsor →</a>
+  </div>
+</section>
+
+<footer id="kontakt">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h3>HUNGER</h3>
+        <p>En kultur- och samhällspodcast från Linköping. Alla bär på en intressant story — bara lyssna.</p>
+      </div>
+      <div>
+        <ul class="footer-links">
+          <li><a href="#avsnitt">Avsnitt</a></li>
+          <li><a href="#vardar">Värdar</a></li>
+          <li><a href="#sponsorer">Wall of Fame</a></li>
+        </ul>
+      </div>
+      <div>
+        <ul class="footer-links">
+          <li><a href="https://www.instagram.com/hunger__podcast/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://open.spotify.com/episode/5VlKM38Rqkk8mJ0le1FlZ1" target="_blank" rel="noopener">Spotify</a></li>
+          <li><a href="mailto:hej@hungerpodcast.se">hej@hungerpodcast.se</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 HUNGER Podcast</span>
+      <span>Byggd med värme i Linköping</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var curtainSection = document.querySelector('.curtain-reveal');
+  var curtainLeft = document.querySelector('.curtain-left');
+  var curtainRight = document.querySelector('.curtain-right');
+  if (curtainSection) {
+    if (reduceMotion) {
+      curtainLeft.style.transform = 'translateX(-100%)';
+      curtainRight.style.transform = 'translateX(100%)';
+    } else {
+      var updateCurtain = function(){
+        var scrollable = curtainSection.offsetHeight - window.innerHeight;
+        var progress = scrollable > 0 ? -curtainSection.getBoundingClientRect().top / scrollable : 0;
+        progress = Math.max(0, Math.min(1, progress));
+        curtainLeft.style.transform = 'translateX(-' + (progress * 100) + '%)';
+        curtainRight.style.transform = 'translateX(' + (progress * 100) + '%)';
+      };
+      var curtainTicking = false;
+      window.addEventListener('scroll', function(){
+        if (!curtainTicking) {
+          window.requestAnimationFrame(function(){ updateCurtain(); curtainTicking = false; });
+          curtainTicking = true;
+        }
+      });
+      window.addEventListener('resize', updateCurtain);
+      updateCurtain();
+    }
+  }
+
+  var revealEls = document.querySelectorAll('.reveal');
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  }
+</script>
+
+</body>
+</html>
