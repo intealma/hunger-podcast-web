@@ -448,8 +448,8 @@
       curtainRight.style.transform = 'translateX(100%)';
     } else {
       var updateCurtain = function(){
-        var scrollable = curtainSection.offsetHeight - window.innerHeight;
-        var progress = scrollable > 0 ? -curtainSection.getBoundingClientRect().top / scrollable : 0;
+        var totalHeight = curtainSection.offsetHeight;
+        var progress = (window.innerHeight - curtainSection.getBoundingClientRect().top) / totalHeight;
         progress = Math.max(0, Math.min(1, progress));
         curtainLeft.style.transform = 'translateX(-' + (progress * 100) + '%)';
         curtainRight.style.transform = 'translateX(' + (progress * 100) + '%)';
