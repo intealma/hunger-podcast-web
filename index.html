@@ -136,6 +136,13 @@
   .curtain-stage{ position:sticky; top:0; height:100vh; overflow:hidden; }
   .curtain-image{ position:absolute; inset:0; }
   .curtain-image img{ width:100%; height:100%; object-fit:cover; }
+  .wall-photo{
+    position:absolute; left:50%; bottom:0;
+    transform:translateX(-50%);
+    height:86%; width:auto;
+    object-fit:contain;
+    pointer-events:none;
+  }
   .curtain-overlay{
     position:absolute; inset:0;
     width:100%; height:100%;
@@ -293,6 +300,7 @@
 <section class="curtain-reveal">
   <div class="curtain-stage">
     <div class="curtain-image"><img src="OrangeWallHungerWeb.png" alt="" aria-hidden="true"></div>
+    <img class="wall-photo" id="wallPhoto" src="HostsOnWall1.png" alt="" aria-hidden="true">
     <img class="curtain-overlay" id="curtainOverlay" src="Curtains1.png" alt="" aria-hidden="true">
   </div>
 </section>
@@ -470,19 +478,27 @@
 
   var curtainSection = document.querySelector('.curtain-reveal');
   var curtainOverlay = document.getElementById('curtainOverlay');
+  var wallPhoto = document.getElementById('wallPhoto');
   var curtainFrames = [
     { src:'Curtains1.png', scale:1.14, upTo:0.4 },
     { src:'Curtains2.png', scale:1.07, upTo:0.6 },
     { src:'Curtains3.png', scale:1.015, upTo:0.8 },
     { src:'Curtains4.png', scale:1, upTo:1 }
   ];
+  var wallPhotoFrames = [
+    { src:'HostsOnWall1.png', upTo:0.5 },
+    { src:'HostsOnWall2.png', upTo:0.75 },
+    { src:'HostsOnWall3.png', upTo:1 }
+  ];
   if (curtainSection) {
     if (reduceMotion) {
       var lastFrame = curtainFrames[curtainFrames.length - 1];
       curtainOverlay.src = lastFrame.src;
       curtainOverlay.style.transform = 'scale(' + lastFrame.scale + ')';
+      wallPhoto.src = wallPhotoFrames[wallPhotoFrames.length - 1].src;
     } else {
       var curtainFrame = -1;
+      var wallFrame = -1;
       var updateCurtain = function(){
         var totalHeight = curtainSection.offsetHeight;
         var progress = (window.innerHeight - curtainSection.getBoundingClientRect().top) / totalHeight;
@@ -495,6 +511,14 @@
           curtainFrame = idx;
           curtainOverlay.src = curtainFrames[idx].src;
           curtainOverlay.style.transform = 'scale(' + curtainFrames[idx].scale + ')';
+        }
+        var widx = wallPhotoFrames.length - 1;
+        for (var j = 0; j < wallPhotoFrames.length; j++) {
+          if (progress <= wallPhotoFrames[j].upTo) { widx = j; break; }
+        }
+        if (widx !== wallFrame) {
+          wallFrame = widx;
+          wallPhoto.src = wallPhotoFrames[widx].src;
         }
       };
       var curtainTicking = false;
