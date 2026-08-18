@@ -52,7 +52,7 @@
   /* fixed full-page photo background, sits behind every section */
   .bg-photo{
     position:fixed; inset:0; z-index:-2;
-    background:url("SofaHungerWeb-horizontal.jpg") center/cover no-repeat;
+    background:url("images/SofaHungerWeb-horizontal.jpg") center/cover no-repeat;
   }
   /* grain overlay, fixed across whole page */
   body::before{
@@ -167,10 +167,31 @@
   .people-rain.raining img{ animation-play-state:running; }
   .people-rain img.landed{
     animation:people-wobble 3.2s ease-in-out infinite;
+    pointer-events:auto;
+    cursor:grab;
+    touch-action:none;
   }
   @keyframes people-wobble{
     0%,100%{ transform:translateY(var(--drop)) rotate(calc(var(--tilt) - 0.6deg)); opacity:1; }
     50%{ transform:translateY(calc(var(--drop) - 1.5px)) rotate(calc(var(--tilt) + 0.6deg)); opacity:1; }
+  }
+
+  /* ---------- grabbable guest ball ---------- */
+  .guest-ball{
+    position:absolute;
+    margin:0;
+    z-index:9999;
+    pointer-events:auto;
+    cursor:grab;
+    touch-action:none;
+    filter:drop-shadow(0 10px 14px rgba(0,0,0,0.4));
+    will-change:transform,left,top;
+  }
+  .guest-ball.dragging{ cursor:grabbing; }
+  .guest-ball.resting{ animation:guest-idle 3.2s ease-in-out infinite; }
+  @keyframes guest-idle{
+    0%,100%{ transform:rotate(calc(var(--gr) - 0.6deg)); }
+    50%{ transform:rotate(calc(var(--gr) + 0.6deg)); }
   }
 
   /* ---------- episodes ---------- */
@@ -316,16 +337,16 @@
       <h1>HUNGER<span class="smoke" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span></h1>
     </div>
     <div class="hero-right">
-      <img src="circlePicHungerWeb.png" alt="HUNGER podcast" width="380" height="380">
+      <img src="images/circlePicHungerWeb.png" alt="HUNGER podcast" width="380" height="380">
     </div>
   </div>
 </section>
 
 <section class="curtain-reveal">
   <div class="curtain-stage">
-    <div class="curtain-image"><img src="OrangeWallHungerWeb.png" alt="" aria-hidden="true"></div>
-    <img class="wall-photo" id="wallPhoto" src="HostsOnWall1.png" alt="" aria-hidden="true">
-    <img class="curtain-overlay" id="curtainOverlay" src="Curtains1.png" alt="" aria-hidden="true">
+    <div class="curtain-image"><img src="images/OrangeWallHungerWeb.png" alt="" aria-hidden="true"></div>
+    <img class="wall-photo" id="wallPhoto" src="images/HostsOnWall1.png" alt="" aria-hidden="true">
+    <img class="curtain-overlay" id="curtainOverlay" src="images/Curtains1.png" alt="" aria-hidden="true">
   </div>
 </section>
 
@@ -504,15 +525,15 @@
   var curtainOverlay = document.getElementById('curtainOverlay');
   var wallPhoto = document.getElementById('wallPhoto');
   var curtainFrames = [
-    { src:'Curtains1.png', scale:1.14, upTo:0.4 },
-    { src:'Curtains2.png', scale:1.07, upTo:0.6 },
-    { src:'Curtains3.png', scale:1.015, upTo:0.8 },
-    { src:'Curtains4.png', scale:1, upTo:1 }
+    { src:'images/Curtains1.png', scale:1.14, upTo:0.4 },
+    { src:'images/Curtains2.png', scale:1.07, upTo:0.6 },
+    { src:'images/Curtains3.png', scale:1.015, upTo:0.8 },
+    { src:'images/Curtains4.png', scale:1, upTo:1 }
   ];
   var wallPhotoFrames = [
-    { src:'HostsOnWall1.png', upTo:0.5 },
-    { src:'HostsOnWall2.png', upTo:0.75 },
-    { src:'HostsOnWall3.png', upTo:1 }
+    { src:'images/HostsOnWall1.png', upTo:0.5 },
+    { src:'images/HostsOnWall2.png', upTo:0.75 },
+    { src:'images/HostsOnWall3.png', upTo:1 }
   ];
   if (curtainSection) {
     if (reduceMotion) {
@@ -562,10 +583,147 @@
   var peopleRain = document.getElementById('peopleRain');
   var curtainRevealSection = document.querySelector('.curtain-reveal');
   if (peopleRain && curtainRevealSection && !reduceMotion) {
-    var personImgs = ['Person1.png','Person2.png','Person3.png','Person4.png','Person5.png','Person6.png','Person7.png','Person8.png','Person9.png','Person10.png','Person11.png','Person12.png','Person13.png'];
+    var personImgs = ['images/Person1.png','images/Person2.png','images/Person3.png','images/Person4.png','images/Person5.png','images/Person6.png','images/Person7.png','images/Person8.png','images/Person9.png','images/Person10.png','images/Person11.png','images/Person12.png','images/Person13.png'];
     var rainCount = personImgs.length;
     var binWidth = 92 / rainCount;
     var rainPeople = [];
+
+    function tiltDeg(el){
+      var m = getComputedStyle(el).transform;
+      if (!m || m === 'none') return 0;
+      var mm = m.match(/matrix\(([^)]+)\)/);
+      if (!mm) return 0;
+      var p = mm[1].split(',').map(Number);
+      return Math.atan2(p[1], p[0]) * 180 / Math.PI;
+    }
+
+    function initGuestBall(img){
+      var dragging = false;
+      var raf = null;
+      var pointerId = null;
+      var offsetX = 0, offsetY = 0;
+      var rot = 0;
+      var vx = 0, vy = 0;
+      var samples = [];
+      var GRAVITY = 1.15, BOUNCE = 0.55, FRICTION = 0.86;
+
+      function toBall(){
+        if (img.classList.contains('guest-ball')) return;
+        rot = tiltDeg(img);
+        var rect = img.getBoundingClientRect();
+        img.style.animation = 'none';
+        img.style.position = 'absolute';
+        img.style.left = (rect.left + window.pageXOffset) + 'px';
+        img.style.top = (rect.top + window.pageYOffset) + 'px';
+        img.style.width = rect.width + 'px';
+        img.style.height = rect.height + 'px';
+        img.style.transform = 'rotate(' + rot + 'deg)';
+        document.body.appendChild(img);
+        img.classList.add('guest-ball');
+        img.classList.remove('landed', 'resting');
+      }
+
+      function onPointerDown(e){
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
+        toBall();
+        img.classList.remove('resting');
+        img.style.animation = 'none';
+        dragging = true;
+        pointerId = e.pointerId;
+        try { img.setPointerCapture(pointerId); } catch(err){}
+        img.classList.add('dragging');
+        var rect = img.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        samples = [{ x:e.clientX, y:e.clientY, t:performance.now() }];
+        e.preventDefault();
+      }
+
+      function onPointerMove(e){
+        if (!dragging) return;
+        var x = e.pageX - offsetX;
+        var y = e.pageY - offsetY;
+        img.style.left = x + 'px';
+        img.style.top = y + 'px';
+        samples.push({ x:e.clientX, y:e.clientY, t:performance.now() });
+        if (samples.length > 6) samples.shift();
+        var a = samples[samples.length - 2], b = samples[samples.length - 1];
+        if (a) {
+          var dt = Math.max(1, b.t - a.t);
+          var swing = ((b.x - a.x) / dt) * 6;
+          img.style.transform = 'rotate(' + Math.max(-70, Math.min(70, rot + swing)) + 'deg)';
+        }
+      }
+
+      function onPointerUp(e){
+        if (!dragging) return;
+        dragging = false;
+        img.classList.remove('dragging');
+        try { img.releasePointerCapture(pointerId); } catch(err){}
+        if (samples.length >= 2) {
+          var first = samples[0], last = samples[samples.length - 1];
+          var dt = Math.max(16, last.t - first.t);
+          vx = (last.x - first.x) / dt * 16;
+          vy = (last.y - first.y) / dt * 16;
+        } else {
+          vx = 0; vy = 0;
+        }
+        startPhysics();
+      }
+
+      function startPhysics(){
+        var w = img.offsetWidth, h = img.offsetHeight;
+        var minX = window.pageXOffset;
+        var maxX = window.pageXOffset + window.innerWidth - w;
+        var minY = 0;
+        var maxY = window.pageYOffset + window.innerHeight - h;
+        function step(){
+          var x = parseFloat(img.style.left);
+          var y = parseFloat(img.style.top);
+          vy += GRAVITY;
+          x += vx;
+          y += vy;
+
+          if (x < minX){ x = minX; vx = -vx * BOUNCE; }
+          if (x > maxX){ x = maxX; vx = -vx * BOUNCE; }
+          if (y < minY){ y = minY; vy = -vy * BOUNCE; }
+
+          var resting = false;
+          if (y > maxY){
+            y = maxY;
+            if (Math.abs(vy) > 2) {
+              vy = -vy * BOUNCE;
+            } else {
+              vy = 0;
+              vx *= FRICTION;
+              resting = Math.abs(vx) < 0.4;
+            }
+          }
+
+          rot += vx * 0.9;
+          img.style.left = x + 'px';
+          img.style.top = y + 'px';
+          img.style.transform = 'rotate(' + rot + 'deg)';
+
+          if (resting) {
+            vx = 0; vy = 0;
+            img.style.setProperty('--gr', rot + 'deg');
+            img.style.animation = '';
+            img.classList.add('resting');
+            raf = null;
+            return;
+          }
+          raf = requestAnimationFrame(step);
+        }
+        raf = requestAnimationFrame(step);
+      }
+
+      img.addEventListener('pointerdown', onPointerDown);
+      img.addEventListener('pointermove', onPointerMove);
+      img.addEventListener('pointerup', onPointerUp);
+      img.addEventListener('pointercancel', onPointerUp);
+    }
+
     for (var r = 0; r < rainCount; r++) {
       var person = document.createElement('img');
       person.src = personImgs[r];
@@ -582,6 +740,7 @@
         }
       });
       peopleRain.appendChild(person);
+      initGuestBall(person);
       rainPeople.push({ el:person, h:h, floorMargin:Math.round(Math.random() * 8) + 4 });
     }
     if ('IntersectionObserver' in window) {
