@@ -195,36 +195,62 @@
   }
 
   /* ---------- episodes ---------- */
-  .episodes{ background:rgba(28,23,18,0.85); color:var(--paper-light); padding:110px 0; }
+  .episodes{ background:rgba(28,23,18,0.7); color:var(--paper-light); padding:110px 0; }
   .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:52px; flex-wrap:wrap; }
   .section-head h2{ font-size:clamp(2.6rem,6vw,4.2rem); color:var(--paper-light); }
   .section-head .eyebrow{ color:var(--marigold); }
-  .ep-list{ border-top:2px solid var(--line); }
-  .ep-row{
-    display:grid;
-    grid-template-columns:64px 1fr auto auto;
-    gap:22px;
-    align-items:center;
-    padding:26px 4px;
-    border-bottom:2px solid var(--line);
-    text-decoration:none;
-    color:var(--paper-light);
-    transition:background-color 0.25s ease, padding-left 0.25s ease;
+  .ep-feature-art{ position:relative; display:flex; flex-wrap:nowrap; align-items:center; justify-content:center; gap:110px; }
+  .ep-feature-speaker{
+    height:250px; width:auto; object-fit:contain;
+    flex-shrink:0;
+    animation:speaker-tilt 1s ease-in-out infinite;
   }
-  .ep-row:hover{ background:rgba(233,162,59,0.08); padding-left:14px; }
-  .ep-num{ font-family:'Space Mono', monospace; color:var(--marigold); font-size:14px; }
-  .ep-title{ font-family:'Bebas Neue', sans-serif; font-size:clamp(1.25rem,2.6vw,1.7rem); letter-spacing:0.01em; }
-  .ep-guest{ font-family:'Newsreader', serif; font-style:italic; font-size:14.5px; color:rgba(251,246,234,0.65); display:block; margin-top:4px; }
-  .ep-tag{
-    font-family:'Space Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em;
-    border:1px solid var(--pink); color:var(--paper-light); padding:5px 10px; white-space:nowrap; justify-self:end;
+  @keyframes speaker-tilt{
+    0%{ transform:rotate(0deg); }
+    50%{ transform:rotate(6deg); }
+    100%{ transform:rotate(0deg); }
   }
-  .ep-play{ color:var(--marigold); justify-self:end; width:16px; }
-  @media (max-width:640px){
-    .ep-row{ grid-template-columns:40px 1fr; }
-    .ep-tag, .ep-play{ display:none; }
+  .ep-cycle{ position:relative; top:-30px; width:clamp(200px, 32vw, 520px); aspect-ratio:190/230; flex-shrink:0; }
+  .ep-play-btn{
+    display:flex; align-items:center; justify-content:center;
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    width:72px; height:72px;
+    border-radius:50%;
+    border:none; padding:0; cursor:pointer;
+    background:var(--marigold);
+    color:var(--forest-deep);
+    transition:transform 0.2s ease, background-color 0.15s ease;
   }
-  .episodes-note{ margin-top:34px; font-size:13px; color:rgba(251,246,234,0.5); font-family:'Space Mono', monospace; }
+  .ep-play-btn:hover{ transform:translate(-50%,-50%) scale(1.08); }
+  .ep-play-btn:active{ background:#B87A22; }
+  .ep-play-btn svg{ width:20px; height:23px; }
+  .ep-play-btn .icon-play{ margin-left:4px; }
+  .ep-play-btn .icon-pause{ display:none; }
+  .ep-play-btn.is-playing .icon-play{ display:none; }
+  .ep-play-btn.is-playing .icon-pause{ display:block; }
+  .ep-cycle-img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:contain;
+    opacity:0;
+    animation:ep-cycle-snap 0.75s steps(1,end) infinite;
+  }
+  .ep-cycle-img:nth-child(1){ opacity:1; animation-delay:0s; }
+  .ep-cycle-img:nth-child(2){ animation-delay:0.25s; }
+  .ep-cycle-img:nth-child(3){ animation-delay:0.5s; }
+  @keyframes ep-cycle-snap{
+    0%{ opacity:1; }
+    33.33%{ opacity:0; }
+    100%{ opacity:0; }
+  }
+  @media (max-width:820px){
+    .ep-feature-art{ flex-wrap:wrap; gap:20px; }
+    .ep-feature-speaker{ height:130px; }
+    .ep-cycle{ top:0; width:min(60vw, 300px); }
+    .ep-play-btn{ position:static; transform:none; order:1; flex-basis:100%; margin:4px 0; }
+    .ep-play-btn:hover{ transform:scale(1.08); }
+  }
 
   /* ---------- hosts ---------- */
   .hosts{ background:rgba(251,246,234,0.88); padding:110px 0; }
@@ -354,58 +380,21 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <p class="eyebrow">Just nu</p>
-        <h2>Senaste avsnitten</h2>
+        <h2>Senaste avsnittet</h2>
       </div>
     </div>
-    <div class="ep-list reveal">
-      <a class="ep-row" href="#" target="_blank" rel="noopener">
-        <span class="ep-num mono">13</span>
-        <span>
-          <span class="ep-title">Bitter — riot grrrls have arrived</span>
-          <span class="ep-guest">med Olle Bush &amp; Dunderjorden</span>
-        </span>
-        <span class="ep-tag">Musik</span>
-        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
-      </a>
-      <a class="ep-row" href="#" target="_blank" rel="noopener">
-        <span class="ep-num mono">12</span>
-        <span>
-          <span class="ep-title">Viggen &amp; Per Valsinger om scenen i LKPG</span>
-          <span class="ep-guest">Dunderjorden-serien, del 2</span>
-        </span>
-        <span class="ep-tag">Scen</span>
-        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
-      </a>
-      <a class="ep-row" href="#" target="_blank" rel="noopener">
-        <span class="ep-num mono">11</span>
-        <span>
-          <span class="ep-title">Sofijah om att bygga eget</span>
-          <span class="ep-guest">med Sofijah &amp; Sandra Thulin</span>
-        </span>
-        <span class="ep-tag">Samhälle</span>
-        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
-      </a>
-      <a class="ep-row" href="#" target="_blank" rel="noopener">
-        <span class="ep-num mono">10</span>
-        <span>
-          <span class="ep-title">LKPG Hardcore: tio år av DIY</span>
-          <span class="ep-guest">med gäster ur LKPGHARDCORE</span>
-        </span>
-        <span class="ep-tag">Musik</span>
-        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
-      </a>
-      <a class="ep-row" href="#" target="_blank" rel="noopener">
-        <span class="ep-num mono">09</span>
-        <span>
-          <span class="ep-title">Vad bär du på? — med Corren-Marta</span>
-          <span class="ep-guest">Personliga berättelser, del 1</span>
-        </span>
-        <span class="ep-tag">Kultur</span>
-        <span class="ep-play"><svg width="12" height="14" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg></span>
-      </a>
+    <div class="ep-feature-art reveal">
+      <img class="ep-feature-speaker" src="images/watercolorSpeaker.png" alt="" aria-hidden="true">
+      <button type="button" class="ep-play-btn" id="epPlayBtn" aria-pressed="false" aria-label="Spela senaste avsnittet">
+        <svg class="icon-play" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="13"/><rect x="7.6" y="0" width="3.4" height="13"/></svg>
+      </button>
+      <div class="ep-cycle">
+        <img class="ep-cycle-img" src="images/OlleSpeaks1.png" alt="" aria-hidden="true">
+        <img class="ep-cycle-img" src="images/OlleSpeaks2.png" alt="" aria-hidden="true">
+        <img class="ep-cycle-img" src="images/OlleSpeaks3.png" alt="" aria-hidden="true">
+      </div>
     </div>
-    <p class="episodes-note">Titlar &amp; gäster ovan är platshållare byggda på era highlights — byt ut mot riktiga shownotes.</p>
   </div>
 </section>
 
@@ -778,6 +767,16 @@
       });
     }, { threshold: 0.12 });
     revealEls.forEach(function(el){ io.observe(el); });
+  }
+
+  var playBtn = document.getElementById('epPlayBtn');
+  if (playBtn) {
+    playBtn.addEventListener('click', function(){
+      var nowPlaying = playBtn.getAttribute('aria-pressed') !== 'true';
+      playBtn.setAttribute('aria-pressed', String(nowPlaying));
+      playBtn.setAttribute('aria-label', nowPlaying ? 'Pausa senaste avsnittet' : 'Spela senaste avsnittet');
+      playBtn.classList.toggle('is-playing', nowPlaying);
+    });
   }
 </script>
 
