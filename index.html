@@ -120,7 +120,7 @@
   .hero-content{ display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:center; }
   .hero-right{ display:flex; justify-content:center; }
   .hero-right img{
-    width:100%; max-width:380px; aspect-ratio:1/1; object-fit:cover;
+    width:100%; max-width:380px; height:auto; aspect-ratio:1/1; object-fit:cover;
     border-radius:50%; border:3px solid var(--marigold);
     box-shadow:10px 10px 0 var(--ink);
   }
@@ -128,6 +128,7 @@
     .hero-content{ grid-template-columns:1fr; }
     .hero-right{ order:-1; }
     .hero-right img{ max-width:220px; }
+    .hero-left{ text-align:center; }
   }
 
   /* ---------- curtain reveal ---------- */
@@ -140,6 +141,7 @@
     transform:translateX(-50%);
     height:86%; width:auto;
     object-fit:contain;
+    object-position:center bottom;
     pointer-events:none;
   }
   .curtain-overlay{
@@ -150,7 +152,7 @@
   }
 
   /* ---------- people rain ---------- */
-  .people-rain{ position:absolute; top:0; left:0; width:100%; height:0; z-index:400; pointer-events:none; overflow:visible; }
+  .people-rain{ position:absolute; top:0; left:0; width:100%; height:0; z-index:400; pointer-events:none; overflow-x:clip; overflow-y:visible; }
   .people-rain img{
     position:absolute;
     width:auto;
@@ -242,10 +244,10 @@
   }
   .ep-cycle-img.active{ opacity:1; }
   @media (max-width:820px){
-    .ep-feature-art{ flex-wrap:wrap; gap:20px; }
-    .ep-feature-speaker{ height:130px; }
-    .ep-cycle{ top:0; width:min(60vw, 300px); }
-    .ep-play-btn{ position:static; left:auto; top:auto; transform:none; order:1; flex-basis:100%; margin:4px 0; }
+    .ep-feature-art{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.35fr); align-items:center; gap:22px 14px; max-width:520px; margin:0 auto; }
+    .ep-feature-speaker{ grid-column:1; grid-row:1; width:100%; height:auto; }
+    .ep-cycle{ grid-column:2; grid-row:1; top:0; width:100%; }
+    .ep-play-btn{ grid-column:1 / -1; grid-row:2; justify-self:center; position:static; left:auto; top:auto; transform:none; width:64px; height:64px; }
     .ep-play-btn:hover{ transform:scale(1.08); }
   }
 
@@ -337,13 +339,31 @@
   .mc-foot a:hover{ color:var(--mc-gold); }
 
   @media (max-width:980px){
-    .menu-card{ grid-template-columns:1fr; padding:28px 22px 18px; }
-    .mc-col-center{ order:-1; }
+    .menu-card{ grid-template-columns:1fr; gap:30px; padding:26px 20px 16px; }
+    .mc-col, .mc-row-3{ display:contents; }
+    .mc-header{ order:1; }
+    .mc-feature{ order:2; }
+    .mc-block-starters{ order:3; }
+    .mc-block-mains{ order:4; }
+    .mc-row-2{ order:5; }
+    .mc-block-cooks{ order:6; }
+    .mc-block-support{ order:7; }
+    .mc-block-find{ order:8; }
+    .mc-foot{ order:9; }
+    .mc-tiles{ grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); }
+    .mc-feature img{ aspect-ratio:4/3; }
   }
   @media (max-width:520px){
-    .mc-row-3, .mc-row-2{ grid-template-columns:1fr; }
-    .mc-titlerow{ grid-template-columns:1fr; justify-items:center; }
-    .mc-title{ border:none; }
+    .menu-hero .wrap{ padding-left:14px; padding-right:14px; }
+    .menu-card{ padding:22px 16px 14px; }
+    .mc-row-2{ grid-template-columns:1fr; }
+    .mc-titlerow{ gap:10px; }
+    .mc-badge{ width:54px; height:54px; font-size:0.5rem; }
+    .mc-title{ padding:0 10px; font-size:2.3rem; }
+    .mc-aside{ font-size:0.56rem; }
+    .mc-aside strong{ font-size:0.66rem; }
+    .mc-kicker, .mc-tagline{ letter-spacing:0.16em; }
+    .mc-foot{ justify-content:center; text-align:center; }
   }
 
   /* ---------- om oss ---------- */
@@ -434,7 +454,15 @@
   .shop-steps li::before{ content:"0" counter(step); display:block; margin-bottom:6px; font-family:'Bebas Neue', sans-serif; font-size:1.8rem; color:var(--pink); }
   .shop-steps strong{ display:block; font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:1.35rem; letter-spacing:0.02em; color:var(--ink); }
   @media (max-width:860px){
-    .gig-grid, .shop-steps{ grid-template-columns:1fr; }
+    .gig-grid{
+      display:flex; gap:16px;
+      overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+      margin:0 -28px; padding:4px 28px 18px; scroll-padding:0 28px;
+    }
+    .gig-grid::-webkit-scrollbar{ display:none; }
+    .gig{ flex:0 0 82%; scroll-snap-align:start; }
+    .gig:hover{ transform:none; }
+    .shop-steps{ grid-template-columns:1fr; gap:22px; margin-top:40px; }
   }
 
   /* ---------- footer ---------- */
@@ -448,7 +476,30 @@
   .footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; padding-top:24px; font-family:'Space Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; opacity:0.55; }
 
   @media (max-width:860px){
-    .footer-grid{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr 1fr; gap:32px 24px; }
+    .footer-grid > div:first-child{ grid-column:1 / -1; }
+  }
+
+  @media (max-width:640px){
+    .section-head{ margin-bottom:32px; }
+    .episodes, .hosts{ padding:72px 0; }
+    .menu-hero{ padding:72px 0; }
+    .sponsors{ padding:72px 0 84px; }
+    .shop{ padding:72px 0 84px; }
+    .sponsors-intro{ margin-top:-12px; font-size:1.1rem; }
+    .shop-intro{ margin:-12px 0 30px; font-size:1rem; }
+
+    .hosts-credits{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .hosts-credits strong{ font-size:1.15rem; }
+    .hosts-credits p{ font-size:12px; }
+
+    .sponsor-notes{ justify-content:center; gap:22px 18px; }
+    .sponsor-note{ min-width:0; padding:20px 18px 16px; }
+    .sponsor-note-title{ font-size:1.45rem; }
+    .sponsor-note-sub{ font-size:10px; }
+
+    /* leave a strip at the very bottom for the fallen guests to land in */
+    footer{ padding:56px 0 120px; }
   }
 </style>
 </head>
@@ -505,7 +556,7 @@
     <div class="menu-card reveal">
 
       <div class="mc-col">
-        <div>
+        <div class="mc-block-starters">
           <h3 class="mc-heading">Förrätter</h3>
           <div class="mc-tiles">
             <a class="mc-tile" href="https://open.spotify.com/episode/5MY7WVwUdrG1z7Yz9p6p3k" target="_blank" rel="noopener">
@@ -530,7 +581,7 @@
             </a>
           </div>
         </div>
-        <div>
+        <div class="mc-block-find">
           <h3 class="mc-heading">Hitta oss</h3>
           <ul class="mc-list mc-list-2">
             <li><a class="mc-item" href="https://open.spotify.com/show/61uI9tNNIXMBrBxQD92KGt" target="_blank" rel="noopener">Spotify <span class="mc-item-end">↗</span></a></li>
@@ -552,7 +603,7 @@
         </div>
 
         <div class="mc-row mc-row-3">
-          <div>
+          <div class="mc-block-cooks">
             <h3 class="mc-heading">Kockarna</h3>
             <ul class="mc-list">
               <li><a class="mc-item" href="#vardar"><span>Malin Bagler<span class="mc-item-sub">Insta manager</span></span></a></li>
@@ -565,7 +616,7 @@
             <span class="mc-tile-row"><span class="mc-name">Olle Bush</span><span class="mc-num">11</span></span>
             <span class="mc-desc">Linkans modedesigner</span>
           </a>
-          <div>
+          <div class="mc-block-support">
             <h3 class="mc-heading">Stötta oss</h3>
             <ul class="mc-list">
               <li><a class="mc-item" href="#butik">Födelsedagsvideo <span class="mc-item-end">→</span></a></li>
@@ -605,7 +656,7 @@
       </div>
 
       <div class="mc-col">
-        <div>
+        <div class="mc-block-mains">
           <h3 class="mc-heading">Varmrätter</h3>
           <div class="mc-tiles">
             <a class="mc-tile" href="https://open.spotify.com/episode/0w4RAG5AKj7Vdfnc8FIB60" target="_blank" rel="noopener">
@@ -865,6 +916,7 @@
     var rainCount = personImgs.length;
     var binWidth = 92 / rainCount;
     var rainPeople = [];
+    var smallScreen = window.matchMedia('(max-width:640px)').matches;
 
     function tiltDeg(el){
       var m = getComputedStyle(el).transform;
@@ -1006,7 +1058,7 @@
       var person = document.createElement('img');
       person.src = personImgs[r];
       person.alt = '';
-      var h = Math.round(80 + Math.random() * 70);
+      var h = smallScreen ? Math.round(48 + Math.random() * 36) : Math.round(80 + Math.random() * 70);
       person.style.height = h + 'px';
       person.style.left = (2 + r * binWidth + Math.random() * binWidth * 0.7) + '%';
       person.style.setProperty('--tilt', Math.round(Math.random() * 60 - 30) + 'deg');
