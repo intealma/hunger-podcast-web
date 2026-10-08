@@ -7,7 +7,7 @@
 <meta name="description" content="HUNGER podcast. Alla bär på en intressant story. Bara lyssna.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#F1E7D2;
@@ -35,7 +35,9 @@
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
+  html{ overflow-x:clip; }
   img,svg{ display:block; max-width:100%; }
+  img{ -webkit-user-drag:none; user-select:none; }
   a{ color:inherit; }
   h1,h2,h3{ margin:0; font-family:'Bebas Neue', sans-serif; letter-spacing:0.01em; font-weight:400; }
   .mono{ font-family:'Space Mono', monospace; }
@@ -247,116 +249,111 @@
     .ep-play-btn:hover{ transform:scale(1.08); }
   }
 
-  /* ---------- menu book hero ---------- */
+  /* ---------- menu card ---------- */
   .menu-hero{ padding:130px 0; background:var(--forest-deep); }
-  .menu-tag-text{
-    font-family:'Caveat', cursive;
-    font-weight:700;
-    font-size:clamp(3.4rem, 9vw, 5.8rem);
-    color:var(--paper-light);
-    text-align:center;
-    margin:0 0 30px;
-  }
-  .book{ position:relative; display:flex; align-items:center; gap:24px; max-width:900px; margin:0 auto; }
-  .book-frame{
-    position:relative; flex:1; min-height:440px;
-    background:var(--paper-light);
-    border:2px solid var(--ink);
-    overflow:hidden;
-    perspective:1800px;
-  }
-  .book-page{
-    position:absolute; top:0; bottom:0; width:50%;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:14px;
-    padding:36px 24px;
-    opacity:0;
-    pointer-events:none;
-  }
-  .book-left{
-    left:0;
-    border-right:1px dashed rgba(28,23,18,0.25);
-    transition:opacity 0.35s ease;
-  }
-  .book-left.active{ opacity:1; pointer-events:auto; }
-  .book-right{
-    left:50%;
-    transform-origin:left center;
-    backface-visibility:hidden;
-    transform:rotateY(-165deg);
-    transition:transform 0.65s ease, opacity 0.2s ease 0.2s;
-  }
-  .book-right.active{
-    opacity:1;
-    pointer-events:auto;
-    transform:rotateY(0deg);
-  }
-  .book-name{
-    font-family:'Bebas Neue', sans-serif;
-    font-size:1.3rem;
-    letter-spacing:0.02em;
+  .menu-card{
+    --mc-gold:#A8865A;
+    --mc-rule:rgba(168,134,90,0.45);
+    --mc-soft:rgba(28,23,18,0.58);
+    display:grid;
+    grid-template-columns:1fr 1.35fr 1fr;
+    gap:34px;
+    align-items:start;
+    padding:34px 38px 20px;
+    background:#FDFBF6;
     color:var(--ink);
-    margin:0;
+    box-shadow:0 30px 70px rgba(0,0,0,0.5);
   }
-  .book-photo{ display:block; }
-  .book-photo img{
-    width:170px; height:170px;
-    object-fit:cover;
-    border-radius:50%;
-    border:1px solid var(--ink);
-    transition:transform 0.2s ease;
-  }
-  .book-photo:hover img{ transform:scale(1.06) rotate(-2deg); }
-  .book-quote{
-    font-family:'Newsreader', serif;
-    font-style:italic;
-    font-size:13.5px;
-    color:rgba(28,23,18,0.65);
-    text-align:center;
-    max-width:230px;
-    margin:0;
-  }
-  @media (max-width:760px){
-    .book-frame{ min-height:auto; }
-    .book-page{ position:static; width:100%; display:none; opacity:1; transform:none; transition:none; }
-    .book-page.active{ display:flex; }
-    .book-left{ border-right:none; border-bottom:1px dashed rgba(28,23,18,0.25); }
-    .book-photo img{ width:150px; height:150px; }
+  .mc-col{ display:flex; flex-direction:column; gap:24px; min-width:0; }
+  .mc-heading{
+    margin:0 0 12px;
+    padding-bottom:6px;
+    border-bottom:1px solid var(--mc-rule);
+    font-family:'Cinzel', serif; font-weight:500;
+    font-size:1rem; letter-spacing:0.14em; line-height:1.2;
+    color:var(--mc-gold);
   }
 
-  .flip-controls{ display:flex; align-items:center; justify-content:center; gap:22px; margin-top:36px; }
-  .flip-arrow{
-    display:flex; align-items:center; justify-content:center;
-    width:40px; height:40px;
-    border-radius:50%;
-    border:2px solid var(--paper-light);
-    background:none;
-    color:var(--paper-light);
-    font-size:20px; line-height:1;
-    cursor:pointer;
-    transition:background-color 0.2s ease, color 0.2s ease;
-  }
-  .flip-arrow:hover{ background:var(--paper-light); color:var(--forest-deep); }
-  .flip-dots{ display:flex; align-items:center; gap:9px; }
-  .flip-dot{
-    width:9px; height:9px;
-    border-radius:50%;
-    border:none; padding:0;
-    background:rgba(251,246,234,0.3);
-    cursor:pointer;
-  }
-  .flip-dot.active{ background:var(--marigold); }
+  .mc-tiles{ display:grid; grid-template-columns:1fr 1fr; gap:18px 14px; }
+  .mc-tile{ display:block; text-decoration:none; color:inherit; }
+  .mc-tile img{ width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:3px; transition:filter 0.2s ease; }
+  .mc-tile:hover img{ filter:brightness(1.08) saturate(1.1); }
+  .mc-tile-row{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-top:8px; }
+  .mc-name{ font-family:'Cinzel', serif; font-size:0.74rem; letter-spacing:0.06em; text-transform:uppercase; line-height:1.25; }
+  .mc-num{ font-family:'Cinzel', serif; font-size:0.74rem; color:var(--mc-gold); flex-shrink:0; }
+  .mc-quote{ display:block; margin:3px 0 0; font-size:0.74rem; line-height:1.35; font-style:italic; color:var(--mc-soft); }
 
-  /* ---------- hosts ---------- */
+  .mc-list{ list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+  .mc-list-2{ grid-template-columns:1fr 1fr; column-gap:18px; }
+  .mc-item{
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    font-family:'Cinzel', serif; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+    color:inherit; text-decoration:none;
+  }
+  a.mc-item:hover{ color:var(--mc-gold); }
+  .mc-item-end{ color:var(--mc-gold); flex-shrink:0; }
+  .mc-item-sub{ display:block; margin-top:2px; font-family:'Newsreader', serif; font-size:0.74rem; letter-spacing:0; text-transform:none; color:var(--mc-soft); }
+
+  .mc-header{ text-align:center; }
+  .mc-kicker{
+    display:flex; align-items:center; gap:12px;
+    font-family:'Cinzel', serif; font-size:0.7rem; letter-spacing:0.24em; color:var(--mc-soft);
+  }
+  .mc-kicker::before, .mc-kicker::after{ content:""; flex:1; height:1px; background:rgba(28,23,18,0.25); }
+  .mc-titlerow{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px; margin-top:16px; }
+  .mc-badge{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    width:72px; height:72px; border-radius:50%;
+    background:var(--mc-gold); color:#fff;
+    font-family:'Cinzel', serif; font-size:0.62rem; letter-spacing:0.1em; line-height:1.3;
+  }
+  .mc-title{
+    margin:0; padding:0 14px;
+    border-left:1px solid rgba(28,23,18,0.25); border-right:1px solid rgba(28,23,18,0.25);
+    font-family:'Cinzel', serif; font-weight:400;
+    font-size:clamp(2.6rem, 4.6vw, 4rem); letter-spacing:0.1em; line-height:1;
+    color:var(--ink);
+  }
+  .mc-aside{ font-family:'Cinzel', serif; font-size:0.66rem; letter-spacing:0.12em; line-height:1.55; color:var(--mc-soft); }
+  .mc-aside strong{ display:block; font-weight:500; font-size:0.78rem; color:var(--ink); }
+  .mc-tagline{ margin:12px 0 0; font-family:'Cinzel', serif; font-size:0.66rem; letter-spacing:0.24em; color:var(--mc-gold); }
+
+  .mc-row{ display:grid; gap:20px; align-items:start; }
+  .mc-row-3{ grid-template-columns:1fr 1.15fr 1fr; }
+  .mc-row-2{ grid-template-columns:1fr 1fr; }
+  .mc-feature{ display:block; text-decoration:none; color:inherit; text-align:center; }
+  .mc-feature img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:3px; }
+  .mc-feature-label{ display:block; margin-top:10px; font-family:'Cinzel', serif; font-size:0.7rem; letter-spacing:0.12em; white-space:nowrap; color:var(--mc-gold); }
+  .mc-feature .mc-tile-row{ justify-content:center; }
+
+  .mc-foot{
+    grid-column:1 / -1;
+    display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    padding-top:12px; border-top:1px solid rgba(28,23,18,0.12);
+    font-family:'Cinzel', serif; font-size:0.62rem; letter-spacing:0.18em; color:var(--mc-soft);
+  }
+  .mc-foot a{ color:inherit; text-decoration:none; }
+  .mc-foot a:hover{ color:var(--mc-gold); }
+
+  @media (max-width:980px){
+    .menu-card{ grid-template-columns:1fr; padding:28px 22px 18px; }
+    .mc-col-center{ order:-1; }
+  }
+  @media (max-width:520px){
+    .mc-row-3, .mc-row-2{ grid-template-columns:1fr; }
+    .mc-titlerow{ grid-template-columns:1fr; justify-items:center; }
+    .mc-title{ border:none; }
+  }
+
+  /* ---------- om oss ---------- */
   .hosts{ padding:110px 0; }
-  .hosts-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; }
-  .host-photo{
-    aspect-ratio:4/5;
-    border:2px solid var(--ink);
-    box-shadow:10px 10px 0 var(--marigold);
-    overflow:hidden;
-  }
-  .host-photo img{ display:block; width:100%; height:100%; object-fit:cover; }
+  .hosts-inner{ max-width:920px; margin:0 auto; }
+  .hosts-photo{ border:2px solid var(--ink); box-shadow:10px 10px 0 var(--marigold); overflow:hidden; }
+  .hosts-photo img{ width:100%; height:auto; }
+  .hosts-credits{ display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-top:24px; color:var(--paper-light); }
+  .hosts-credits p{ margin:0; font-family:'Space Mono', monospace; font-size:13px; letter-spacing:0.04em; color:rgba(251,246,234,0.75); }
+  .hosts-credits p:last-child{ text-align:right; }
+  .hosts-credits strong{ display:block; font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:1.5rem; letter-spacing:0.02em; color:var(--paper-light); }
 
   /* ---------- sponsors: wall of fame ---------- */
   .sponsors{
@@ -366,59 +363,60 @@
     padding:110px 0 130px;
   }
   .sponsors .section-head h2{ color:var(--marigold); text-shadow:4px 4px 0 var(--pink); }
-  .sponsors-intro{ max-width:56ch; font-style:italic; color:rgba(251,246,234,0.8); margin-top:-28px; margin-bottom:56px; }
-  .tier{ margin-bottom:56px; }
-  .tier-label{
-    font-family:'Space Mono', monospace; text-transform:uppercase; letter-spacing:0.14em; font-size:13px;
-    color:var(--paper-light); opacity:0.7; margin-bottom:22px; display:flex; align-items:center; gap:14px;
-  }
-  .tier-label::after{ content:""; flex:1; height:1px; background:var(--line); }
-  .sticker-grid{ display:flex; flex-wrap:wrap; gap:22px; }
-  .sticker{
-    position:relative;
-    background:var(--paper-light);
-    color:var(--ink);
-    border:2px solid var(--ink);
-    padding:20px 22px;
-    text-decoration:none;
-    box-shadow:5px 5px 0 rgba(0,0,0,0.35);
-    transition:transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .sticker::before{
-    content:"";
-    position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg);
-    width:54px; height:16px;
-    background:rgba(233,162,59,0.55);
-    border:1px solid rgba(28,23,18,0.25);
-  }
-  .sticker:hover{ transform:rotate(0deg) translateY(-4px) !important; box-shadow:8px 8px 0 var(--pink); }
-  .sticker-name{ font-family:'Bebas Neue', sans-serif; letter-spacing:0.01em; line-height:1; }
-  .sticker-cat{ display:block; font-family:'Space Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--moss); margin-top:6px; }
-
-  .tier-headliner .sticker{ font-size:1.9rem; padding:28px 30px; }
-  .tier-headliner .sticker:nth-child(odd){ transform:rotate(-2.5deg); }
-  .tier-headliner .sticker:nth-child(even){ transform:rotate(2deg); }
-
-  .tier-support .sticker-name{ font-size:1.3rem; }
-  .tier-support .sticker:nth-child(3n){ transform:rotate(3deg); }
-  .tier-support .sticker:nth-child(3n+1){ transform:rotate(-2deg); }
-  .tier-support .sticker:nth-child(3n+2){ transform:rotate(1.5deg); }
-
-  .tier-crew .sticker{ padding:12px 16px; }
-  .tier-crew .sticker-name{ font-size:1rem; }
-  .tier-crew .sticker::before{ width:30px; height:10px; top:-6px; }
-  .tier-crew .sticker:nth-child(4n){ transform:rotate(-3deg); }
-  .tier-crew .sticker:nth-child(4n+1){ transform:rotate(2.5deg); }
-  .tier-crew .sticker:nth-child(4n+2){ transform:rotate(-1.5deg); }
-  .tier-crew .sticker:nth-child(4n+3){ transform:rotate(3deg); }
+  .sponsors-intro{ max-width:56ch; font-style:italic; font-size:1.25rem; color:rgba(251,246,234,0.85); margin:-28px 0 36px; }
 
   .become-sponsor{
     display:inline-flex; align-items:center; gap:10px;
     font-family:'Space Mono', monospace; text-transform:uppercase; font-size:13px; letter-spacing:0.1em;
     color:var(--marigold); text-decoration:none; border-bottom:2px solid var(--marigold); padding-bottom:4px;
-    margin-top:12px;
   }
   .become-sponsor:hover{ color:var(--pink); border-color:var(--pink); }
+
+  /* ---------- shop (fiverr-style gigs) ---------- */
+  .shop{ background:rgba(251,246,234,0.96); color:var(--ink); padding:110px 0 120px; }
+  .shop .section-head .eyebrow{ color:var(--pink); }
+  .shop .section-head h2{ color:var(--forest); }
+  .shop-intro{ max-width:58ch; margin:-28px 0 44px; font-size:1.1rem; color:rgba(28,23,18,0.75); }
+  .gig-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; }
+  .gig{
+    display:flex; flex-direction:column;
+    background:#fff;
+    border:1px solid #E4E5E7; border-radius:8px;
+    overflow:hidden;
+    text-decoration:none; color:inherit;
+    transition:box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .gig:hover{ box-shadow:0 10px 28px rgba(28,23,18,0.14); transform:translateY(-3px); }
+  .gig-thumb{ position:relative; aspect-ratio:16/10; background:var(--marigold); overflow:hidden; }
+  .gig-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .gig-thumb-cutout img{ object-fit:contain; object-position:center bottom; }
+  .gig-tag{
+    position:absolute; top:12px; left:12px;
+    padding:4px 10px; border-radius:999px;
+    background:rgba(255,255,255,0.92);
+    font-family:'Space Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em;
+  }
+  .gig-body{ flex:1; padding:14px 16px 16px; }
+  .gig-seller{ display:flex; align-items:center; gap:8px; font-size:14px; }
+  .gig-seller img{ width:26px; height:26px; border-radius:50%; object-fit:cover; }
+  .gig-seller strong{ font-weight:600; }
+  .gig-level{ margin-left:auto; font-family:'Space Mono', monospace; font-size:11px; color:#74767E; }
+  .gig-title{ margin:10px 0 0; font-size:1.05rem; line-height:1.4; }
+  .gig:hover .gig-title{ text-decoration:underline; }
+  .gig-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; border-top:1px solid #E4E5E7;
+  }
+  .gig-cta{ font-family:'Space Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--pink); }
+  .gig-price{ font-weight:600; font-size:1.1rem; }
+  .gig-price small{ margin-right:4px; font-family:'Space Mono', monospace; font-size:10.5px; font-weight:400; text-transform:uppercase; letter-spacing:0.06em; color:#74767E; }
+  .shop-steps{ list-style:none; margin:56px 0 0; padding:0; display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; counter-reset:step; }
+  .shop-steps li{ counter-increment:step; padding-top:16px; border-top:2px solid var(--ink); font-size:15px; color:rgba(28,23,18,0.8); }
+  .shop-steps li::before{ content:"0" counter(step); display:block; margin-bottom:6px; font-family:'Bebas Neue', sans-serif; font-size:1.8rem; color:var(--pink); }
+  .shop-steps strong{ display:block; font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:1.35rem; letter-spacing:0.02em; color:var(--ink); }
+  @media (max-width:860px){
+    .gig-grid, .shop-steps{ grid-template-columns:1fr; }
+  }
 
   /* ---------- footer ---------- */
   footer{ background:rgba(28,23,18,0.88); color:rgba(251,246,234,0.7); padding:70px 0 32px; }
@@ -431,7 +429,6 @@
   .footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; padding-top:24px; font-family:'Space Mono', monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; opacity:0.55; }
 
   @media (max-width:860px){
-    .hosts-grid{ grid-template-columns:1fr; }
     .footer-grid{ grid-template-columns:1fr; }
   }
 </style>
@@ -464,12 +461,12 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <h2>Senaste avsnittet</h2>
+        <h2>Smakprov</h2>
       </div>
     </div>
     <div class="ep-feature-art reveal">
       <img class="ep-feature-speaker" src="images/watercolorSpeaker.png" alt="" aria-hidden="true">
-      <button type="button" class="ep-play-btn" id="epPlayBtn" aria-pressed="false" aria-label="Spela senaste avsnittet">
+      <button type="button" class="ep-play-btn" id="epPlayBtn" aria-pressed="false" aria-label="Spela smakprovet">
         <svg class="icon-play" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M0 0l11 6.5L0 13V0z"/></svg>
         <svg class="icon-pause" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="13"/><rect x="7.6" y="0" width="3.4" height="13"/></svg>
       </button>
@@ -486,87 +483,164 @@
 
 <section class="menu-hero" id="meny">
   <div class="wrap">
-    <h2 class="menu-tag-text">Meny</h2>
-    <div class="book reveal">
-      <button type="button" class="flip-arrow flip-prev" aria-label="Föregående sida">‹</button>
-      <div class="book-frame">
-        <div class="book-page book-left active">
-          <p class="book-name">Joel P</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/JoelP1.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
+    <div class="menu-card reveal">
+
+      <div class="mc-col">
+        <div>
+          <h3 class="mc-heading">Förrätter</h3>
+          <div class="mc-tiles">
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/JoelP1.png" alt="Joel P">
+              <span class="mc-tile-row"><span class="mc-name">Joel P</span><span class="mc-num">1</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/CorrenMarta2.png" alt="Corren-Marta">
+              <span class="mc-tile-row"><span class="mc-name">Corren-Marta</span><span class="mc-num">2</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/SaraDamne3.png" alt="Sara Damne">
+              <span class="mc-tile-row"><span class="mc-name">Sara Damne</span><span class="mc-num">3</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/Hammarn4.png" alt="Hammarn">
+              <span class="mc-tile-row"><span class="mc-name">Hammarn</span><span class="mc-num">4</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+          </div>
         </div>
-        <div class="book-page book-left">
-          <p class="book-name">Sara Damne</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/SaraDamne3.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-left">
-          <p class="book-name">Sofijah</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/Sofijah5.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-left">
-          <p class="book-name">Viggen</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/Viggen7.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-left">
-          <p class="book-name">Sandra Thulin</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/SandraThulin9.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-left">
-          <p class="book-name">Linda Ulvan</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/LindaUlvan11.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-right active">
-          <p class="book-name">Corren-Marta</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/CorrenMarta2.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-right">
-          <p class="book-name">Hammarn</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/Hammarn4.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-right">
-          <p class="book-name">Carlborg</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/Carlborg6.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-right">
-          <p class="book-name">Bitter</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/Bitter8.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-right">
-          <p class="book-name">Vikkys Konst</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/VikkysKonst10.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
-        </div>
-        <div class="book-page book-right">
-          <p class="book-name">Olle Bush</p>
-          <a class="book-photo" href="#" target="_blank" rel="noopener"><img src="images/FoodMenu/OlleBush12.png" alt=""></a>
-          <p class="book-quote">”Lägg in citat här.”</p>
+        <div>
+          <h3 class="mc-heading">Hitta oss</h3>
+          <ul class="mc-list mc-list-2">
+            <li><a class="mc-item" href="https://open.spotify.com/episode/5VlKM38Rqkk8mJ0le1FlZ1" target="_blank" rel="noopener">Spotify <span class="mc-item-end">↗</span></a></li>
+            <li><a class="mc-item" href="https://www.instagram.com/hunger__podcast/" target="_blank" rel="noopener">Instagram <span class="mc-item-end">↗</span></a></li>
+            <li><a class="mc-item" href="mailto:hej@hungerpodcast.se">Mejla oss <span class="mc-item-end">↗</span></a></li>
+            <li><a class="mc-item" href="#avsnitt">Smakprov <span class="mc-item-end">↑</span></a></li>
+          </ul>
         </div>
       </div>
-      <button type="button" class="flip-arrow flip-next" aria-label="Nästa sida">›</button>
-    </div>
-    <div class="flip-controls">
-      <div class="flip-dots"></div>
+
+      <div class="mc-col mc-col-center">
+        <div class="mc-header">
+          <p class="mc-kicker">HUNGER</p>
+          <div class="mc-titlerow">
+            <span class="mc-badge">Bara<br>lyssna</span>
+            <h2 class="mc-title">Meny</h2>
+            <p class="mc-aside"><strong>Kultur &amp;</strong>samhälle<br>från Linköping</p>
+          </div>
+          <p class="mc-tagline">Alla bär på en intressant story</p>
+        </div>
+
+        <div class="mc-row mc-row-3">
+          <div>
+            <h3 class="mc-heading">Kockarna</h3>
+            <ul class="mc-list">
+              <li><a class="mc-item" href="#vardar"><span>Malin Bagler<span class="mc-item-sub">Insta manager</span></span></a></li>
+              <li><a class="mc-item" href="#vardar"><span>Alma Mateo Johansson<span class="mc-item-sub">Klippare</span></span></a></li>
+            </ul>
+          </div>
+          <a class="mc-feature" href="#" target="_blank" rel="noopener">
+            <img src="images/FoodMenu/OlleBush12.png" alt="Olle Bush">
+            <span class="mc-feature-label">Dagens rätt</span>
+            <span class="mc-tile-row"><span class="mc-name">Olle Bush</span><span class="mc-num">12</span></span>
+            <span class="mc-quote">”Lägg in citat här.”</span>
+          </a>
+          <div>
+            <h3 class="mc-heading">Stötta oss</h3>
+            <ul class="mc-list">
+              <li><a class="mc-item" href="#butik">Födelsedagsvideo <span class="mc-item-end">→</span></a></li>
+              <li><a class="mc-item" href="#butik">Hälsning <span class="mc-item-end">→</span></a></li>
+              <li><a class="mc-item" href="#butik">Bild <span class="mc-item-end">→</span></a></li>
+              <li><a class="mc-item" href="#sponsorer">Bli sponsor <span class="mc-item-end">→</span></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mc-row mc-row-2">
+          <div>
+            <h3 class="mc-heading">Efterrätt</h3>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/LindaUlvan11.png" alt="Linda Ulvan">
+              <span class="mc-tile-row"><span class="mc-name">Linda Ulvan</span><span class="mc-num">11</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+          </div>
+          <div>
+            <h3 class="mc-heading">På menyn</h3>
+            <ul class="mc-list">
+              <li class="mc-item">Kultur</li>
+              <li class="mc-item">Samhälle</li>
+              <li class="mc-item">Människor</li>
+              <li class="mc-item">Linköping</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mc-col">
+        <div>
+          <h3 class="mc-heading">Varmrätter</h3>
+          <div class="mc-tiles">
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/Sofijah5.png" alt="Sofijah">
+              <span class="mc-tile-row"><span class="mc-name">Sofijah</span><span class="mc-num">5</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/Carlborg6.png" alt="Carlborg">
+              <span class="mc-tile-row"><span class="mc-name">Carlborg</span><span class="mc-num">6</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/Viggen7.png" alt="Viggen">
+              <span class="mc-tile-row"><span class="mc-name">Viggen</span><span class="mc-num">7</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/Bitter8.png" alt="Bitter">
+              <span class="mc-tile-row"><span class="mc-name">Bitter</span><span class="mc-num">8</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/SandraThulin9.png" alt="Sandra Thulin">
+              <span class="mc-tile-row"><span class="mc-name">Sandra Thulin</span><span class="mc-num">9</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/VikkysKonst10.png" alt="Vikkys Konst">
+              <span class="mc-tile-row"><span class="mc-name">Vikkys Konst</span><span class="mc-num">10</span></span>
+              <span class="mc-quote">”Lägg in citat här.”</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mc-foot">
+        <a href="https://www.instagram.com/hunger__podcast/" target="_blank" rel="noopener">Följ oss @hunger__podcast</a>
+        <span>Linköping</span>
+        <a href="#top">HUNGER podcast</a>
+      </div>
+
     </div>
   </div>
 </section>
 
 <section class="hosts reveal" id="vardar">
   <div class="wrap">
-    <div class="hosts-grid">
-      <div class="host-photo" id="malaPhoto">
-        <img src="images/WhoAreWe/Mala.png" alt="">
+    <div class="hosts-inner">
+      <div class="section-head">
+        <div>
+          <h2>Om oss</h2>
+        </div>
       </div>
-      <div class="host-photo">
-        <img src="images/WhoAreWe/Alma.png" alt="">
+      <div class="hosts-photo">
+        <img src="images/AlmMala.JPG" alt="Malin Bagler och Alma Mateo Johansson" loading="lazy">
+      </div>
+      <div class="hosts-credits">
+        <p><strong>Malin Bagler</strong>insta manager</p>
+        <p><strong>Alma Mateo Johansson</strong>klippare</p>
       </div>
     </div>
   </div>
@@ -576,48 +650,85 @@
   <div class="wrap">
     <div class="section-head">
       <div>
-        <p class="eyebrow">Tack</p>
         <h2>Wall of Fame</h2>
       </div>
     </div>
-    <p class="sponsors-intro">Utan dessa hjältar hade HUNGER varit tyst. Stort, äkta tack till alla som stöttar podden — stort som smått.</p>
+    <p class="sponsors-intro">Utan dessa hjältar hade HUNGER varit tyst.</p>
+    <a class="become-sponsor" href="mailto:alma.mj03@gmail.com?subject=Sponsring%20av%20HUNGER&body=Hej%20HUNGER%21%0A%0AVi%20vill%20g%C3%A4rna%20sponsra%20podden.%0A%0AF%C3%B6retag%2Fnamn%3A%0AKontaktperson%3A%0A">Bli sponsor →</a>
+  </div>
+</section>
 
-    <div class="tier">
-      <p class="tier-label">Headliners</p>
-      <div class="sticker-grid tier-headliner">
-        <a class="sticker" href="#"><span class="sticker-name">Kafé Björk</span><span class="sticker-cat">Kafé</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Bryggeri LKPG</span><span class="sticker-cat">Bryggeri</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Vinylgänget</span><span class="sticker-cat">Skivbutik</span></a>
+<section class="shop reveal" id="butik">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Stötta podden</p>
+        <h2>Köp en bit av HUNGER</h2>
       </div>
     </div>
-
-    <div class="tier">
-      <p class="tier-label">Support Act</p>
-      <div class="sticker-grid tier-support">
-        <a class="sticker" href="#"><span class="sticker-name">Sidan 2 Bokhandel</span><span class="sticker-cat">Böcker</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Studio Ljudrum</span><span class="sticker-cat">Ljudstudio</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Grönsakslandet</span><span class="sticker-cat">Saluhall</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Cykelverkstan Ekbacken</span><span class="sticker-cat">Cykel</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Tatuering Nordstjärnan</span><span class="sticker-cat">Studio</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Saluhallen Deli</span><span class="sticker-cat">Mat</span></a>
-      </div>
+    <p class="shop-intro">Beställ en video, en hälsning eller en bild från oss. Allt du köper går direkt till att hålla podden igång.</p>
+    <!-- Priserna nedan är platshållare: byt till era riktiga priser. -->
+    <div class="gig-grid">
+      <a class="gig" href="mailto:alma.mj03@gmail.com?subject=Best%C3%A4llning%3A%20F%C3%B6delsedagsvideo&body=Hej%20HUNGER%21%0A%0AJag%20vill%20best%C3%A4lla%20en%20f%C3%B6delsedagsvideo.%0A%0ATill%20vem%3A%0AVem%20fyller%20%C3%A5r%20och%20hur%20gammal%3A%0AN%C3%A4r%20beh%C3%B6ver%20den%20vara%20klar%3A%0AN%C3%A5got%20s%C3%A4rskilt%20ni%20ska%20s%C3%A4ga%3A%0A">
+        <div class="gig-thumb">
+          <img src="images/AlmMala.JPG" alt="" loading="lazy">
+          <span class="gig-tag">Video</span>
+        </div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <img src="images/circlePicHungerWeb.png" alt="">
+            <strong>HUNGER</strong>
+            <span class="gig-level">Linköping</span>
+          </div>
+          <p class="gig-title">Vi spelar in en personlig födelsedagsvideo till någon du tycker om</p>
+        </div>
+        <div class="gig-foot">
+          <span class="gig-cta">Beställ via mejl</span>
+          <span class="gig-price"><small>Från</small>199 kr</span>
+        </div>
+      </a>
+      <a class="gig" href="mailto:alma.mj03@gmail.com?subject=Best%C3%A4llning%3A%20H%C3%A4lsning&body=Hej%20HUNGER%21%0A%0AJag%20vill%20best%C3%A4lla%20en%20h%C3%A4lsning.%0A%0ATill%20vem%3A%0ATillf%C3%A4lle%3A%0AN%C3%A4r%20beh%C3%B6ver%20den%20vara%20klar%3A%0AN%C3%A5got%20s%C3%A4rskilt%20ni%20ska%20s%C3%A4ga%3A%0A">
+        <div class="gig-thumb">
+          <img src="images/circlePicHungerWeb.png" alt="" loading="lazy">
+          <span class="gig-tag">Hälsning</span>
+        </div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <img src="images/circlePicHungerWeb.png" alt="">
+            <strong>HUNGER</strong>
+            <span class="gig-level">Linköping</span>
+          </div>
+          <p class="gig-title">Vi skickar en hälsning — till en vän, en kollega eller dig själv</p>
+        </div>
+        <div class="gig-foot">
+          <span class="gig-cta">Beställ via mejl</span>
+          <span class="gig-price"><small>Från</small>99 kr</span>
+        </div>
+      </a>
+      <a class="gig" href="mailto:alma.mj03@gmail.com?subject=Best%C3%A4llning%3A%20Bild&body=Hej%20HUNGER%21%0A%0AJag%20vill%20best%C3%A4lla%20en%20bild%20av%20er.%0A%0AVilken%20sorts%20bild%3A%0ATill%20vem%20%28om%20det%20%C3%A4r%20en%20g%C3%A5va%29%3A%0AN%C3%A4r%20beh%C3%B6ver%20den%20vara%20klar%3A%0A">
+        <div class="gig-thumb gig-thumb-cutout">
+          <img src="images/HostsOnWall1.png" alt="" loading="lazy">
+          <span class="gig-tag">Bild</span>
+        </div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <img src="images/circlePicHungerWeb.png" alt="">
+            <strong>HUNGER</strong>
+            <span class="gig-level">Linköping</span>
+          </div>
+          <p class="gig-title">Du får en bild av oss — signerad, personlig eller helt galen</p>
+        </div>
+        <div class="gig-foot">
+          <span class="gig-cta">Beställ via mejl</span>
+          <span class="gig-price"><small>Från</small>149 kr</span>
+        </div>
+      </a>
     </div>
-
-    <div class="tier">
-      <p class="tier-label">Crew &amp; Vänner</p>
-      <div class="sticker-grid tier-crew">
-        <a class="sticker" href="#"><span class="sticker-name">Frisör Front</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Repig Studios</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Fanzine Klubben</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Loppis Söder</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Bruna Bageriet</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">DIY Skateshop</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Kollektivet Rum 3</span></a>
-        <a class="sticker" href="#"><span class="sticker-name">Blomsterlandet LKPG</span></a>
-      </div>
-    </div>
-
-    <a class="become-sponsor" href="#kontakt">Bli sponsor →</a>
+    <ol class="shop-steps">
+      <li><strong>Välj</strong>Klicka på det du vill ha så öppnas ett färdigt mejl.</li>
+      <li><strong>Berätta</strong>Fyll i vem det är till och vad vi ska säga eller göra.</li>
+      <li><strong>Få den</strong>Vi spelar in, skickar och hör av oss om betalningen.</li>
+    </ol>
   </div>
 </section>
 
@@ -631,8 +742,10 @@
       <div>
         <ul class="footer-links">
           <li><a href="#avsnitt">Avsnitt</a></li>
-          <li><a href="#vardar">Värdar</a></li>
+          <li><a href="#meny">Meny</a></li>
+          <li><a href="#vardar">Om oss</a></li>
           <li><a href="#sponsorer">Wall of Fame</a></li>
+          <li><a href="#butik">Stötta oss</a></li>
         </ul>
       </div>
       <div>
@@ -934,83 +1047,8 @@
   window.addEventListener('resize', centerPlayButton);
   centerPlayButton();
 
-  var malaPhoto = document.getElementById('malaPhoto');
-  if (malaPhoto && !reduceMotion) {
-    var malaImg = malaPhoto.querySelector('img');
-    var malaBase = 'images/WhoAreWe/Mala.png';
-    var malaEyes = {
-      0: 'images/WhoAreWe/MalaEyesMoving/Mala0.png',
-      45: 'images/WhoAreWe/MalaEyesMoving/Mala45.png',
-      90: 'images/WhoAreWe/MalaEyesMoving/Mala90.png',
-      135: 'images/WhoAreWe/MalaEyesMoving/Mala135.png'
-    };
-    var malaAngleBuckets = [0, 45, 90, 135, 180];
-    var malaCurrentSrc = '';
-    var malaCurrentFlip = false;
-
-    function updateMalaEyes(clientX, clientY){
-      var rect = malaPhoto.getBoundingClientRect();
-      var headX = rect.left + rect.width / 2;
-      var headY = rect.top + rect.height * 0.38;
-      var dx = clientX - headX;
-      var dy = headY - clientY;
-      var angle = Math.atan2(dy, dx) * 180 / Math.PI;
-
-      var nextSrc, nextFlip;
-      if (angle < 0) {
-        nextSrc = malaBase;
-        nextFlip = false;
-      } else {
-        var nearest = malaAngleBuckets[0];
-        malaAngleBuckets.forEach(function(b){
-          if (Math.abs(b - angle) < Math.abs(nearest - angle)) nearest = b;
-        });
-        if (nearest === 180) { nextSrc = malaEyes[0]; nextFlip = true; }
-        else { nextSrc = malaEyes[nearest]; nextFlip = false; }
-      }
-
-      if (nextSrc === malaCurrentSrc && nextFlip === malaCurrentFlip) return;
-      malaCurrentSrc = nextSrc;
-      malaCurrentFlip = nextFlip;
-      malaImg.src = nextSrc;
-      malaImg.style.transform = nextFlip ? 'scaleX(-1)' : 'none';
-    }
-
-    document.addEventListener('mousemove', function(e){ updateMalaEyes(e.clientX, e.clientY); });
-  }
-
-  var bookLefts = document.querySelectorAll('.book-left');
-  var bookRights = document.querySelectorAll('.book-right');
-  if (bookLefts.length && bookRights.length) {
-    var flipIndex = 0;
-    var flipPageCount = Math.min(bookLefts.length, bookRights.length);
-    var flipDotsWrap = document.querySelector('.flip-dots');
-    var flipPrevBtn = document.querySelector('.flip-prev');
-    var flipNextBtn = document.querySelector('.flip-next');
-    var flipDots = [];
-
-    for (var fp = 0; fp < flipPageCount; fp++) {
-      (function(i){
-        var dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'flip-dot';
-        dot.setAttribute('aria-label', 'Sida ' + (i + 1));
-        dot.addEventListener('click', function(){ goToFlipPage(i); });
-        flipDotsWrap.appendChild(dot);
-        flipDots.push(dot);
-      })(fp);
-    }
-
-    function goToFlipPage(i){
-      flipIndex = (i + flipPageCount) % flipPageCount;
-      bookLefts.forEach(function(page, idx){ page.classList.toggle('active', idx === flipIndex); });
-      bookRights.forEach(function(page, idx){ page.classList.toggle('active', idx === flipIndex); });
-      flipDots.forEach(function(dot, idx){ dot.classList.toggle('active', idx === flipIndex); });
-    }
-    if (flipPrevBtn) flipPrevBtn.addEventListener('click', function(){ goToFlipPage(flipIndex - 1); });
-    if (flipNextBtn) flipNextBtn.addEventListener('click', function(){ goToFlipPage(flipIndex + 1); });
-    goToFlipPage(0);
-  }
+  // block the browser's native image/link drag ghost (it made the page look like it slid around)
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
   var cycleImgs = document.querySelectorAll('.ep-cycle-img');
   var cycleIndex = 0;
@@ -1040,7 +1078,7 @@
     });
     function setPlayingState(isPlaying){
       playBtn.setAttribute('aria-pressed', String(isPlaying));
-      playBtn.setAttribute('aria-label', isPlaying ? 'Pausa senaste avsnittet' : 'Spela senaste avsnittet');
+      playBtn.setAttribute('aria-label', isPlaying ? 'Pausa smakprovet' : 'Spela smakprovet');
       playBtn.classList.toggle('is-playing', isPlaying);
       if (epArt) epArt.classList.toggle('is-playing', isPlaying);
       if (isPlaying) { startCycle(); } else { stopCycle(); }
