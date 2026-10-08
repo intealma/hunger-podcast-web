@@ -157,7 +157,7 @@
     opacity:0;
     filter:drop-shadow(0 10px 14px rgba(0,0,0,0.4));
     animation-name:people-fall;
-    animation-timing-function:cubic-bezier(0.55,0,1,0.45);
+    animation-timing-function:cubic-bezier(0.3,0,0.7,0.6);
     animation-fill-mode:forwards;
     animation-play-state:paused;
   }
@@ -274,14 +274,14 @@
     color:var(--mc-gold);
   }
 
-  .mc-tiles{ display:grid; grid-template-columns:1fr 1fr; gap:18px 14px; }
+  .mc-tiles{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:18px 14px; }
   .mc-tile{ display:block; text-decoration:none; color:inherit; }
   .mc-tile img{ width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:3px; transition:filter 0.2s ease; }
   .mc-tile:hover img{ filter:brightness(1.08) saturate(1.1); }
-  .mc-tile-row{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-top:8px; }
+  .mc-tile-row{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:2px 8px; margin-top:8px; }
   .mc-name{ font-family:'Cinzel', serif; font-size:0.74rem; letter-spacing:0.06em; text-transform:uppercase; line-height:1.25; }
   .mc-num{ font-family:'Cinzel', serif; font-size:0.74rem; color:var(--mc-gold); flex-shrink:0; }
-  .mc-quote{ display:block; margin:3px 0 0; font-size:0.74rem; line-height:1.35; font-style:italic; color:var(--mc-soft); }
+  .mc-desc{ display:block; margin:3px 0 0; font-size:0.74rem; line-height:1.35; font-style:italic; color:var(--mc-soft); }
 
   .mc-list{ list-style:none; margin:0; padding:0; display:grid; gap:10px; }
   .mc-list-2{ grid-template-columns:1fr 1fr; column-gap:18px; }
@@ -320,7 +320,8 @@
 
   .mc-row{ display:grid; gap:20px; align-items:start; }
   .mc-row-3{ grid-template-columns:1fr 1.15fr 1fr; }
-  .mc-row-2{ grid-template-columns:1fr 1fr; }
+  .mc-row-2{ grid-template-columns:1fr 2fr; }
+  .mc-more{ margin-top:14px; }
   .mc-feature{ display:block; text-decoration:none; color:inherit; text-align:center; }
   .mc-feature img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:3px; }
   .mc-feature-label{ display:block; margin-top:10px; font-family:'Cinzel', serif; font-size:0.7rem; letter-spacing:0.12em; white-space:nowrap; color:var(--mc-gold); }
@@ -365,12 +366,31 @@
   .sponsors .section-head h2{ color:var(--marigold); text-shadow:4px 4px 0 var(--pink); }
   .sponsors-intro{ max-width:56ch; font-style:italic; font-size:1.25rem; color:rgba(251,246,234,0.85); margin:-28px 0 36px; }
 
-  .become-sponsor{
-    display:inline-flex; align-items:center; gap:10px;
-    font-family:'Space Mono', monospace; text-transform:uppercase; font-size:13px; letter-spacing:0.1em;
-    color:var(--marigold); text-decoration:none; border-bottom:2px solid var(--marigold); padding-bottom:4px;
+  .sponsor-notes{ display:flex; flex-wrap:wrap; gap:34px; padding-top:10px; }
+  .sponsor-note{
+    position:relative;
+    min-width:220px;
+    padding:30px 30px 26px;
+    background:var(--paper-light);
+    color:var(--ink);
+    border:2px solid var(--ink);
+    text-decoration:none;
+    box-shadow:5px 5px 0 rgba(0,0,0,0.35);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .become-sponsor:hover{ color:var(--pink); border-color:var(--pink); }
+  .sponsor-note::before{
+    content:"";
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg);
+    width:54px; height:16px;
+    background:rgba(233,162,59,0.55);
+    border:1px solid rgba(28,23,18,0.25);
+  }
+  .sponsor-note:nth-child(1){ transform:rotate(-2.5deg); }
+  .sponsor-note:nth-child(2){ transform:rotate(2deg); }
+  .sponsor-note:nth-child(3){ transform:rotate(-1deg); }
+  .sponsor-note:hover{ transform:rotate(0deg) translateY(-4px); box-shadow:8px 8px 0 var(--pink); }
+  .sponsor-note-title{ display:block; font-family:'Bebas Neue', sans-serif; font-size:2rem; letter-spacing:0.01em; line-height:1; }
+  .sponsor-note-sub{ display:block; margin-top:8px; font-family:'Space Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--moss); }
 
   /* ---------- shop (fiverr-style gigs) ---------- */
   .shop{ background:rgba(251,246,234,0.96); color:var(--ink); padding:110px 0 120px; }
@@ -400,7 +420,6 @@
   .gig-seller{ display:flex; align-items:center; gap:8px; font-size:14px; }
   .gig-seller img{ width:26px; height:26px; border-radius:50%; object-fit:cover; }
   .gig-seller strong{ font-weight:600; }
-  .gig-level{ margin-left:auto; font-family:'Space Mono', monospace; font-size:11px; color:#74767E; }
   .gig-title{ margin:10px 0 0; font-size:1.05rem; line-height:1.4; }
   .gig:hover .gig-title{ text-decoration:underline; }
   .gig-foot{
@@ -489,34 +508,33 @@
         <div>
           <h3 class="mc-heading">Förrätter</h3>
           <div class="mc-tiles">
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+            <a class="mc-tile" href="https://open.spotify.com/episode/5MY7WVwUdrG1z7Yz9p6p3k" target="_blank" rel="noopener">
               <img src="images/FoodMenu/JoelP1.png" alt="Joel P">
               <span class="mc-tile-row"><span class="mc-name">Joel P</span><span class="mc-num">1</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+              <span class="mc-desc">Hur man kommer till skott när man har 1000 idéer</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
-              <img src="images/FoodMenu/CorrenMarta2.png" alt="Corren-Marta">
-              <span class="mc-tile-row"><span class="mc-name">Corren-Marta</span><span class="mc-num">2</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+            <a class="mc-tile" href="https://open.spotify.com/episode/3aiaEziyr773YUkYv2eXgD" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/CorrenMarta2.png" alt="Corren-Märta">
+              <span class="mc-tile-row"><span class="mc-name">Corren-Märta</span><span class="mc-num">2</span></span>
+              <span class="mc-desc">Hon gjorde Corren viral</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+            <a class="mc-tile" href="https://open.spotify.com/episode/1cWH9Lg3WGDsscqTTvkVDW" target="_blank" rel="noopener">
               <img src="images/FoodMenu/SaraDamne3.png" alt="Sara Damne">
               <span class="mc-tile-row"><span class="mc-name">Sara Damne</span><span class="mc-num">3</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+              <span class="mc-desc">Att föreviga stunden</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
-              <img src="images/FoodMenu/Hammarn4.png" alt="Hammarn">
-              <span class="mc-tile-row"><span class="mc-name">Hammarn</span><span class="mc-num">4</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+            <a class="mc-tile" href="https://open.spotify.com/episode/5SJDLweVSg8TVskRIW4ADB" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/Hammarn4.png" alt="Mikael Hammarberg">
+              <span class="mc-tile-row"><span class="mc-name">Mikael Hammarberg</span><span class="mc-num">4</span></span>
+              <span class="mc-desc">Att rita det man inte kan säga</span>
             </a>
           </div>
         </div>
         <div>
           <h3 class="mc-heading">Hitta oss</h3>
           <ul class="mc-list mc-list-2">
-            <li><a class="mc-item" href="https://open.spotify.com/episode/5VlKM38Rqkk8mJ0le1FlZ1" target="_blank" rel="noopener">Spotify <span class="mc-item-end">↗</span></a></li>
+            <li><a class="mc-item" href="https://open.spotify.com/show/61uI9tNNIXMBrBxQD92KGt" target="_blank" rel="noopener">Spotify <span class="mc-item-end">↗</span></a></li>
             <li><a class="mc-item" href="https://www.instagram.com/hunger__podcast/" target="_blank" rel="noopener">Instagram <span class="mc-item-end">↗</span></a></li>
-            <li><a class="mc-item" href="mailto:hej@hungerpodcast.se">Mejla oss <span class="mc-item-end">↗</span></a></li>
             <li><a class="mc-item" href="#avsnitt">Smakprov <span class="mc-item-end">↑</span></a></li>
           </ul>
         </div>
@@ -541,18 +559,18 @@
               <li><a class="mc-item" href="#vardar"><span>Alma Mateo Johansson<span class="mc-item-sub">Klippare</span></span></a></li>
             </ul>
           </div>
-          <a class="mc-feature" href="#" target="_blank" rel="noopener">
+          <a class="mc-feature" href="https://open.spotify.com/episode/0L6EJMkPyMlmPpGxEnd3fy" target="_blank" rel="noopener">
             <img src="images/FoodMenu/OlleBush12.png" alt="Olle Bush">
             <span class="mc-feature-label">Dagens rätt</span>
-            <span class="mc-tile-row"><span class="mc-name">Olle Bush</span><span class="mc-num">12</span></span>
-            <span class="mc-quote">”Lägg in citat här.”</span>
+            <span class="mc-tile-row"><span class="mc-name">Olle Bush</span><span class="mc-num">11</span></span>
+            <span class="mc-desc">Linkans modedesigner</span>
           </a>
           <div>
             <h3 class="mc-heading">Stötta oss</h3>
             <ul class="mc-list">
               <li><a class="mc-item" href="#butik">Födelsedagsvideo <span class="mc-item-end">→</span></a></li>
               <li><a class="mc-item" href="#butik">Hälsning <span class="mc-item-end">→</span></a></li>
-              <li><a class="mc-item" href="#butik">Bild <span class="mc-item-end">→</span></a></li>
+              <li><a class="mc-item" href="#butik">Signerad bild <span class="mc-item-end">→</span></a></li>
               <li><a class="mc-item" href="#sponsorer">Bli sponsor <span class="mc-item-end">→</span></a></li>
             </ul>
           </div>
@@ -561,20 +579,27 @@
         <div class="mc-row mc-row-2">
           <div>
             <h3 class="mc-heading">Efterrätt</h3>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+            <a class="mc-tile" href="https://open.spotify.com/episode/5VlKM38Rqkk8mJ0le1FlZ1" target="_blank" rel="noopener">
               <img src="images/FoodMenu/LindaUlvan11.png" alt="Linda Ulvan">
-              <span class="mc-tile-row"><span class="mc-name">Linda Ulvan</span><span class="mc-num">11</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+              <span class="mc-tile-row"><span class="mc-name">Linda Ulvan</span><span class="mc-num">10</span></span>
+              <span class="mc-desc">Med Vikkyskonst — Roligast i Sverige</span>
             </a>
           </div>
           <div>
-            <h3 class="mc-heading">På menyn</h3>
-            <ul class="mc-list">
-              <li class="mc-item">Kultur</li>
-              <li class="mc-item">Samhälle</li>
-              <li class="mc-item">Människor</li>
-              <li class="mc-item">Linköping</li>
-            </ul>
+            <h3 class="mc-heading">Nytt på menyn</h3>
+            <div class="mc-tiles">
+              <a class="mc-tile" href="https://open.spotify.com/episode/2a50r19rrSaI2XxsgWWHv0" target="_blank" rel="noopener">
+                <img src="images/FoodMenu/Dunderjorden13.png" alt="Dunderjorden">
+                <span class="mc-tile-row"><span class="mc-name">Dunderjorden</span><span class="mc-num">13</span></span>
+                <span class="mc-desc">Hardcore. Punk. DIY.</span>
+              </a>
+              <a class="mc-tile" href="https://open.spotify.com/episode/4brL8yfWhPiZOn0F2i9ldS" target="_blank" rel="noopener">
+                <img src="images/FoodMenu/PelleValsinger12.jpg" alt="Pelle Valsinger">
+                <span class="mc-tile-row"><span class="mc-name">Pelle Valsinger</span><span class="mc-num">12</span></span>
+                <span class="mc-desc">Sportif BOSS</span>
+              </a>
+            </div>
+            <a class="mc-item mc-more" href="https://open.spotify.com/show/61uI9tNNIXMBrBxQD92KGt" target="_blank" rel="noopener">Alla avsnitt <span class="mc-item-end">↗</span></a>
           </div>
         </div>
       </div>
@@ -583,35 +608,35 @@
         <div>
           <h3 class="mc-heading">Varmrätter</h3>
           <div class="mc-tiles">
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+            <a class="mc-tile" href="https://open.spotify.com/episode/0w4RAG5AKj7Vdfnc8FIB60" target="_blank" rel="noopener">
               <img src="images/FoodMenu/Sofijah5.png" alt="Sofijah">
               <span class="mc-tile-row"><span class="mc-name">Sofijah</span><span class="mc-num">5</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+              <span class="mc-desc">Låtarna som hjälpte en hel generation</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
-              <img src="images/FoodMenu/Carlborg6.png" alt="Carlborg">
-              <span class="mc-tile-row"><span class="mc-name">Carlborg</span><span class="mc-num">6</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+            <a class="mc-tile" href="https://open.spotify.com/episode/3uuNwLyWyGeoZV70YR2i3y" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/Carlborg6.png" alt="Anders Carlborg">
+              <span class="mc-tile-row"><span class="mc-name">Anders Carlborg</span><span class="mc-num">6</span></span>
+              <span class="mc-desc">LKPG Hardcore och ”ÖS”</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+            <a class="mc-tile" href="https://open.spotify.com/episode/00vXMwdECwaGTgLMeALr9P" target="_blank" rel="noopener">
               <img src="images/FoodMenu/Viggen7.png" alt="Viggen">
               <span class="mc-tile-row"><span class="mc-name">Viggen</span><span class="mc-num">7</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+              <span class="mc-desc">Straight up LKPG Hardcore</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+            <a class="mc-tile" href="https://open.spotify.com/episode/440tVNVUU0OG5k68lQeZ2O" target="_blank" rel="noopener">
               <img src="images/FoodMenu/Bitter8.png" alt="Bitter">
               <span class="mc-tile-row"><span class="mc-name">Bitter</span><span class="mc-num">8</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+              <span class="mc-desc">The riot grrrls have arrived</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
+            <a class="mc-tile" href="https://open.spotify.com/episode/5xGu6aPy5YR4ja1wB5wuoO" target="_blank" rel="noopener">
               <img src="images/FoodMenu/SandraThulin9.png" alt="Sandra Thulin">
               <span class="mc-tile-row"><span class="mc-name">Sandra Thulin</span><span class="mc-num">9</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+              <span class="mc-desc">Sann kärlek</span>
             </a>
-            <a class="mc-tile" href="#" target="_blank" rel="noopener">
-              <img src="images/FoodMenu/VikkysKonst10.png" alt="Vikkys Konst">
-              <span class="mc-tile-row"><span class="mc-name">Vikkys Konst</span><span class="mc-num">10</span></span>
-              <span class="mc-quote">”Lägg in citat här.”</span>
+            <a class="mc-tile" href="https://open.spotify.com/episode/5VlKM38Rqkk8mJ0le1FlZ1" target="_blank" rel="noopener">
+              <img src="images/FoodMenu/VikkysKonst10.png" alt="Vikkyskonst">
+              <span class="mc-tile-row"><span class="mc-name">Vikkyskonst</span><span class="mc-num">10</span></span>
+              <span class="mc-desc">&amp; Konstnarenochkocken — Roligast i Sverige</span>
             </a>
           </div>
         </div>
@@ -636,7 +661,7 @@
         </div>
       </div>
       <div class="hosts-photo">
-        <img src="images/AlmMala.JPG" alt="Malin Bagler och Alma Mateo Johansson" loading="lazy">
+        <img src="images/AlmMala.JPG" alt="Malin Bagler och Alma Mateo Johansson" width="3456" height="2304" loading="lazy">
       </div>
       <div class="hosts-credits">
         <p><strong>Malin Bagler</strong>insta manager</p>
@@ -654,7 +679,20 @@
       </div>
     </div>
     <p class="sponsors-intro">Utan dessa hjältar hade HUNGER varit tyst.</p>
-    <a class="become-sponsor" href="mailto:alma.mj03@gmail.com?subject=Sponsring%20av%20HUNGER&body=Hej%20HUNGER%21%0A%0AVi%20vill%20g%C3%A4rna%20sponsra%20podden.%0A%0AF%C3%B6retag%2Fnamn%3A%0AKontaktperson%3A%0A">Bli sponsor →</a>
+    <div class="sponsor-notes">
+      <a class="sponsor-note" href="mailto:alma.mj03@gmail.com?subject=Sponsring%20av%20HUNGER&body=Hej%20HUNGER%21%0A%0AVi%20vill%20g%C3%A4rna%20sponsra%20podden.%0A%0AF%C3%B6retag%2Fnamn%3A%0AKontaktperson%3A%0A">
+        <span class="sponsor-note-title">Bli sponsor</span>
+        <span class="sponsor-note-sub">Din logga här</span>
+      </a>
+      <a class="sponsor-note" href="mailto:alma.mj03@gmail.com?subject=Sponsring%20av%20HUNGER&body=Hej%20HUNGER%21%0A%0AVi%20vill%20g%C3%A4rna%20sponsra%20podden.%0A%0AF%C3%B6retag%2Fnamn%3A%0AKontaktperson%3A%0A">
+        <span class="sponsor-note-title">Bli sponsor</span>
+        <span class="sponsor-note-sub">Plats ledig</span>
+      </a>
+      <a class="sponsor-note" href="mailto:alma.mj03@gmail.com?subject=Sponsring%20av%20HUNGER&body=Hej%20HUNGER%21%0A%0AVi%20vill%20g%C3%A4rna%20sponsra%20podden.%0A%0AF%C3%B6retag%2Fnamn%3A%0AKontaktperson%3A%0A">
+        <span class="sponsor-note-title">Bli sponsor</span>
+        <span class="sponsor-note-sub">Hjälte sökes</span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -666,8 +704,7 @@
         <h2>Köp en bit av HUNGER</h2>
       </div>
     </div>
-    <p class="shop-intro">Beställ en video, en hälsning eller en bild från oss. Allt du köper går direkt till att hålla podden igång.</p>
-    <!-- Priserna nedan är platshållare: byt till era riktiga priser. -->
+    <p class="shop-intro">Beställ en video, en hälsning eller en signerad bild från oss. Allt du köper går direkt till att hålla podden igång.</p>
     <div class="gig-grid">
       <a class="gig" href="mailto:alma.mj03@gmail.com?subject=Best%C3%A4llning%3A%20F%C3%B6delsedagsvideo&body=Hej%20HUNGER%21%0A%0AJag%20vill%20best%C3%A4lla%20en%20f%C3%B6delsedagsvideo.%0A%0ATill%20vem%3A%0AVem%20fyller%20%C3%A5r%20och%20hur%20gammal%3A%0AN%C3%A4r%20beh%C3%B6ver%20den%20vara%20klar%3A%0AN%C3%A5got%20s%C3%A4rskilt%20ni%20ska%20s%C3%A4ga%3A%0A">
         <div class="gig-thumb">
@@ -678,13 +715,12 @@
           <div class="gig-seller">
             <img src="images/circlePicHungerWeb.png" alt="">
             <strong>HUNGER</strong>
-            <span class="gig-level">Linköping</span>
           </div>
           <p class="gig-title">Vi spelar in en personlig födelsedagsvideo till någon du tycker om</p>
         </div>
         <div class="gig-foot">
           <span class="gig-cta">Beställ via mejl</span>
-          <span class="gig-price"><small>Från</small>199 kr</span>
+          <span class="gig-price"><small>Från</small>100 kr</span>
         </div>
       </a>
       <a class="gig" href="mailto:alma.mj03@gmail.com?subject=Best%C3%A4llning%3A%20H%C3%A4lsning&body=Hej%20HUNGER%21%0A%0AJag%20vill%20best%C3%A4lla%20en%20h%C3%A4lsning.%0A%0ATill%20vem%3A%0ATillf%C3%A4lle%3A%0AN%C3%A4r%20beh%C3%B6ver%20den%20vara%20klar%3A%0AN%C3%A5got%20s%C3%A4rskilt%20ni%20ska%20s%C3%A4ga%3A%0A">
@@ -696,31 +732,29 @@
           <div class="gig-seller">
             <img src="images/circlePicHungerWeb.png" alt="">
             <strong>HUNGER</strong>
-            <span class="gig-level">Linköping</span>
           </div>
           <p class="gig-title">Vi skickar en hälsning — till en vän, en kollega eller dig själv</p>
         </div>
         <div class="gig-foot">
           <span class="gig-cta">Beställ via mejl</span>
-          <span class="gig-price"><small>Från</small>99 kr</span>
+          <span class="gig-price"><small>Från</small>50 kr</span>
         </div>
       </a>
-      <a class="gig" href="mailto:alma.mj03@gmail.com?subject=Best%C3%A4llning%3A%20Bild&body=Hej%20HUNGER%21%0A%0AJag%20vill%20best%C3%A4lla%20en%20bild%20av%20er.%0A%0AVilken%20sorts%20bild%3A%0ATill%20vem%20%28om%20det%20%C3%A4r%20en%20g%C3%A5va%29%3A%0AN%C3%A4r%20beh%C3%B6ver%20den%20vara%20klar%3A%0A">
+      <a class="gig" href="mailto:alma.mj03@gmail.com?subject=Best%C3%A4llning%3A%20Signerad%20bild&body=Hej%20HUNGER%21%0A%0AJag%20vill%20best%C3%A4lla%20en%20signerad%20bild%20av%20er.%0A%0AVem%20ska%20den%20signeras%20till%3A%0AN%C3%A5got%20s%C3%A4rskilt%20ni%20ska%20skriva%3A%0AAdress%20att%20skicka%20till%3A%0A">
         <div class="gig-thumb gig-thumb-cutout">
           <img src="images/HostsOnWall1.png" alt="" loading="lazy">
-          <span class="gig-tag">Bild</span>
+          <span class="gig-tag">Signerad bild</span>
         </div>
         <div class="gig-body">
           <div class="gig-seller">
             <img src="images/circlePicHungerWeb.png" alt="">
             <strong>HUNGER</strong>
-            <span class="gig-level">Linköping</span>
           </div>
-          <p class="gig-title">Du får en bild av oss — signerad, personlig eller helt galen</p>
+          <p class="gig-title">Du får en signerad bild av oss, med en hälsning till dig eller någon du vill ge den till</p>
         </div>
         <div class="gig-foot">
           <span class="gig-cta">Beställ via mejl</span>
-          <span class="gig-price"><small>Från</small>149 kr</span>
+          <span class="gig-price"><small>Från</small>25 kr</span>
         </div>
       </a>
     </div>
@@ -751,8 +785,7 @@
       <div>
         <ul class="footer-links">
           <li><a href="https://www.instagram.com/hunger__podcast/" target="_blank" rel="noopener">Instagram</a></li>
-          <li><a href="https://open.spotify.com/episode/5VlKM38Rqkk8mJ0le1FlZ1" target="_blank" rel="noopener">Spotify</a></li>
-          <li><a href="mailto:hej@hungerpodcast.se">hej@hungerpodcast.se</a></li>
+          <li><a href="https://open.spotify.com/show/61uI9tNNIXMBrBxQD92KGt" target="_blank" rel="noopener">Spotify</a></li>
         </ul>
       </div>
     </div>
@@ -977,7 +1010,7 @@
       person.style.height = h + 'px';
       person.style.left = (2 + r * binWidth + Math.random() * binWidth * 0.7) + '%';
       person.style.setProperty('--tilt', Math.round(Math.random() * 60 - 30) + 'deg');
-      person.style.animationDuration = (5 + Math.random() * 3.5).toFixed(2) + 's';
+      person.style.animationDuration = '8s';
       person.style.animationDelay = (Math.random() * 1.2).toFixed(2) + 's';
       person.addEventListener('animationend', function(e){
         if (e.animationName === 'people-fall') {
@@ -995,12 +1028,23 @@
           if (entry.isIntersecting) {
             curtainEverVisible = true;
           } else if (curtainEverVisible) {
-            var docHeight = document.documentElement.scrollHeight;
             var viewTop = window.scrollY;
+            var setRainFloor = function(){
+              var floor = document.body.offsetHeight;
+              rainPeople.forEach(function(p){
+                p.el.style.setProperty('--drop', Math.max(50, floor - p.floorMargin - viewTop) + 'px');
+              });
+            };
+            rainPeople.forEach(function(p){ p.el.style.top = (viewTop - p.h) + 'px'; });
+            setRainFloor();
+            // fall time follows the distance, so a longer page doesn't make them fall faster
             rainPeople.forEach(function(p){
-              p.el.style.top = (viewTop - p.h) + 'px';
-              p.el.style.setProperty('--drop', Math.max(50, docHeight - p.floorMargin - viewTop) + 'px');
+              var dist = parseFloat(p.el.style.getPropertyValue('--drop'));
+              var pxPerSec = 420 + Math.random() * 180;
+              p.el.style.animationDuration = Math.max(4, dist / pxPerSec).toFixed(2) + 's';
             });
+            // the page keeps growing as lazy images and fonts load, so keep the floor at the real bottom
+            if ('ResizeObserver' in window) new ResizeObserver(setRainFloor).observe(document.body);
             peopleRain.classList.add('raining');
             rainObserver.unobserve(entry.target);
           }
