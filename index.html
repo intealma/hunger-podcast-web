@@ -366,6 +366,35 @@
     .mc-foot{ justify-content:center; text-align:center; }
   }
 
+  /* ---------- gästnytt ---------- */
+  .news{ background:var(--paper-light); color:var(--ink); padding:110px 0; }
+  .news .section-head .eyebrow{ color:var(--pink); }
+  .news .section-head h2{ color:var(--forest); }
+  .news-intro{ max-width:58ch; margin:-28px 0 40px; font-size:1.1rem; color:rgba(28,23,18,0.75); }
+  .news-grid{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:28px 26px; }
+  .news-item{ display:flex; flex-direction:column; padding-top:16px; border-top:2px solid var(--ink); }
+  .news-meta{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .news-meta img{ width:38px; height:38px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+  .news-guest{ font-family:'Bebas Neue', sans-serif; font-size:1.15rem; letter-spacing:0.02em; line-height:1.1; }
+  .news-date{ display:block; font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(28,23,18,0.55); }
+  .news-title{ margin:0; font-family:'Newsreader', serif; font-weight:600; font-size:1.2rem; line-height:1.3; letter-spacing:0; }
+  .news-summary{ margin:8px 0 14px; font-size:15px; line-height:1.55; color:rgba(28,23,18,0.78); }
+  .news-link{ margin-top:auto; font-family:'Space Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--pink); text-decoration:none; }
+  .news-link:hover{ text-decoration:underline; }
+  .news-empty{ font-style:italic; color:rgba(28,23,18,0.6); }
+  .news-more{
+    margin-top:36px; padding:10px 18px;
+    border:2px solid var(--ink); background:none; cursor:pointer;
+    font-family:'Space Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink);
+  }
+  .news-more:hover{ background:var(--ink); color:var(--paper-light); }
+  @media (max-width:980px){ .news-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+  @media (max-width:640px){
+    .news{ padding:72px 0; }
+    .news-intro{ margin-top:-12px; font-size:1rem; }
+    .news-grid{ grid-template-columns:1fr; }
+  }
+
   /* ---------- om oss ---------- */
   .hosts{ padding:110px 0; }
   .hosts-inner{ max-width:920px; margin:0 auto; }
@@ -703,6 +732,20 @@
   </div>
 </section>
 
+<section class="news reveal" id="gastnytt">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Vad gör gästerna nu?</p>
+        <h2>Gästnytt</h2>
+      </div>
+    </div>
+    <p class="news-intro">Nytt från folket som har suttit i soffan: släpp, spelningar, utställningar och projekt. Uppdateras varje dag.</p>
+    <div class="news-grid" id="newsGrid"></div>
+    <button type="button" class="news-more" id="newsMore" hidden>Visa fler</button>
+  </div>
+</section>
+
 <section class="hosts reveal" id="vardar">
   <div class="wrap">
     <div class="hosts-inner">
@@ -828,6 +871,7 @@
         <ul class="footer-links">
           <li><a href="#avsnitt">Avsnitt</a></li>
           <li><a href="#meny">Meny</a></li>
+          <li><a href="#gastnytt">Gästnytt</a></li>
           <li><a href="#vardar">Om oss</a></li>
           <li><a href="#sponsorer">Wall of Fame</a></li>
           <li><a href="#butik">Stötta oss</a></li>
@@ -1142,6 +1186,85 @@
   window.addEventListener('load', centerPlayButton);
   window.addEventListener('resize', centerPlayButton);
   centerPlayButton();
+
+  var newsGrid = document.getElementById('newsGrid');
+  if (newsGrid) {
+    var newsMore = document.getElementById('newsMore');
+    var NEWS_SHOWN = 6;
+    // guest photo + name come from the menu card, so new episodes work without extra setup
+    var guestTile = function(item){
+      var tiles = Array.from(document.querySelectorAll('#meny .mc-tile, #meny .mc-feature'));
+      var byName = tiles.find(function(t){ var n = t.querySelector('.mc-name'); return n && n.textContent.trim().toLowerCase() === String(item.guest || '').trim().toLowerCase(); });
+      return byName || tiles.find(function(t){ var n = t.querySelector('.mc-num'); return n && n.textContent.trim() === String(item.episode); });
+    };
+    var formatDate = function(iso){
+      var d = new Date(iso + 'T12:00:00');
+      return isNaN(d) ? '' : d.toLocaleDateString('sv-SE', { day:'numeric', month:'long', year:'numeric' });
+    };
+    var renderNews = function(items, showAll){
+      newsGrid.innerHTML = '';
+      if (!items.length) {
+        var empty = document.createElement('p');
+        empty.className = 'news-empty';
+        empty.textContent = 'De första nyheterna kommer snart.';
+        newsGrid.appendChild(empty);
+        newsMore.hidden = true;
+        return;
+      }
+      items.slice(0, showAll ? items.length : NEWS_SHOWN).forEach(function(item){
+        var art = document.createElement('article');
+        art.className = 'news-item';
+        var meta = document.createElement('div');
+        meta.className = 'news-meta';
+        var tile = guestTile(item);
+        var tileImg = tile && tile.querySelector('img');
+        if (tileImg) {
+          var img = document.createElement('img');
+          img.src = tileImg.getAttribute('src');
+          img.alt = '';
+          meta.appendChild(img);
+        }
+        var who = document.createElement('div');
+        var guest = document.createElement('span');
+        guest.className = 'news-guest';
+        guest.textContent = item.guest;
+        var date = document.createElement('span');
+        date.className = 'news-date';
+        date.textContent = formatDate(item.date);
+        who.appendChild(guest);
+        who.appendChild(date);
+        meta.appendChild(who);
+        var title = document.createElement('h3');
+        title.className = 'news-title';
+        title.textContent = item.title;
+        var summary = document.createElement('p');
+        summary.className = 'news-summary';
+        summary.textContent = item.summary;
+        art.appendChild(meta);
+        art.appendChild(title);
+        art.appendChild(summary);
+        if (/^https?:\/\//.test(item.url || '')) {
+          var link = document.createElement('a');
+          link.className = 'news-link';
+          link.href = item.url;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = 'Läs mer' + (item.source ? ' på ' + item.source : '') + ' ↗';
+          art.appendChild(link);
+        }
+        newsGrid.appendChild(art);
+      });
+      newsMore.hidden = showAll || items.length <= NEWS_SHOWN;
+    };
+    fetch('news.json', { cache:'no-cache' })
+      .then(function(r){ return r.ok ? r.json() : { items: [] }; })
+      .catch(function(){ return { items: [] }; })
+      .then(function(data){
+        var items = (data.items || []).slice().sort(function(a, b){ return String(b.date).localeCompare(String(a.date)); });
+        renderNews(items, false);
+        newsMore.addEventListener('click', function(){ renderNews(items, true); });
+      });
+  }
 
   // block the browser's native image/link drag ghost (it made the page look like it slid around)
   document.addEventListener('dragstart', function(e){ e.preventDefault(); });
